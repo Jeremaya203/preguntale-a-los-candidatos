@@ -71,13 +71,18 @@ class AnalyzeRequest(BaseModel):
 search_engine: Optional[HybridSearch] = None
 groq_client:   Optional[Groq]         = None
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    global search_engine, groq_client
+def _load_search_engine():
+    global search_engine
     try:
         search_engine = HybridSearch()
     except Exception as e:
         print(f"⚠️  Motor de búsqueda no disponible: {e}")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global groq_client
+    import threading
+    threading.Thread(target=_load_search_engine, daemon=True).start()
     if GROQ_API_KEY:
         groq_client = Groq(api_key=GROQ_API_KEY)
     yield
