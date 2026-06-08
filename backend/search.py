@@ -19,7 +19,7 @@ COLLECTION      = "candidatos_docs"
 EMBED_MODEL     = "paraphrase-multilingual-MiniLM-L12-v2"
 RERANKER_MODEL  = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"  # Multilingüe ES+EN
 K_RRF           = 60
-N_CANDIDATES    = 40   # Candidatos antes del re-ranking
+N_CANDIDATES    = 15   # Candidatos antes del re-ranking (40 era demasiado lento en CPU)
 TOP_K_DEFAULT   = 6    # Resultados finales
 
 
