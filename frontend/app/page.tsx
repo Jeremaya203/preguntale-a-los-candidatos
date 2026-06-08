@@ -403,7 +403,7 @@ function MainApp(){
   const charSize = isMobile ? 75 : 180;
 
   return(
-    <div style={{height:'100vh',background:'#0E0E1A',display:'flex',flexDirection:'column',overflow:'hidden'}}>
+    <div style={{height:'100dvh',background:'#0E0E1A',display:'flex',flexDirection:'column',overflow:'hidden'}}>
 
       {/* ── Header ── */}
       <header style={{display:'flex',alignItems:'center',justifyContent:'space-between',
@@ -446,22 +446,34 @@ function MainApp(){
         <main style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden',minWidth:0}}>
 
           {/* Characters + filtro */}
-          <div style={{padding: isMobile?'10px 12px 8px':'16px 16px 10px',
+          <div style={{padding: isMobile?'8px 12px':'16px 16px 10px',
             borderBottom:'1px solid #2A2A42',background:'#0A0A14',flexShrink:0}}>
-            <div style={{display:'flex',gap: isMobile?12:20,justifyContent:'center',
-              maxWidth: isMobile?300:500,margin:'0 auto'}}>
-              <CharPanel char="jaguar" state={jagState} active={jagActive}
-                color={CANDS['ivan-cepeda'].color} maxSize={charSize}/>
-              <div style={{display:'flex',alignItems:'center',padding:'0 2px'}}>
-                <span style={{fontFamily:'var(--pixel)',fontSize: isMobile?'6px':'8px',color:'#2A2A42'}}>VS</span>
+
+            {/* Personajes: solo en desktop */}
+            {!isMobile&&(
+              <div style={{display:'flex',gap:20,justifyContent:'center',maxWidth:500,margin:'0 auto'}}>
+                <CharPanel char="jaguar" state={jagState} active={jagActive}
+                  color={CANDS['ivan-cepeda'].color} maxSize={charSize}/>
+                <div style={{display:'flex',alignItems:'center',padding:'0 2px'}}>
+                  <span style={{fontFamily:'var(--pixel)',fontSize:'8px',color:'#2A2A42'}}>VS</span>
+                </div>
+                <CharPanel char="tigre" state={tigState} active={tigActive}
+                  color={CANDS['abelardo'].color} maxSize={charSize}/>
               </div>
-              <CharPanel char="tigre" state={tigState} active={tigActive}
-                color={CANDS['abelardo'].color} maxSize={charSize}/>
-            </div>
+            )}
+
+            {/* Estado en móvil (reemplaza personajes) */}
+            {isMobile&&(loading||jagState!=='idle')&&(
+              <div style={{textAlign:'center',marginBottom:6}}>
+                <span style={{fontFamily:'var(--pixel)',fontSize:'6px',color:bubbleColor}}>
+                  {jagState==='thinking'?'● PENSANDO...':jagState==='responding'?'● RESPONDIENDO...':''}
+                </span>
+              </div>
+            )}
 
             {/* Candidate filter */}
             <div style={{display:'flex',gap: isMobile?6:8,justifyContent:'center',
-              marginTop: isMobile?10:14,flexWrap:'wrap'}}>
+              marginTop: isMobile?0:14,flexWrap:'wrap'}}>
               {([
                 {key:'all',label:'AMBOS',color:'#5A5A72',border:'#3A3A52'},
                 {key:'ivan-cepeda',label:'EL JAGUAR',color:CANDS['ivan-cepeda'].color,border:CANDS['ivan-cepeda'].colorBorder},
