@@ -149,20 +149,21 @@ function WelcomeScreen({onEnter}:{onEnter:()=>void}){
       </div>
 
       {/* Personajes */}
-      <div style={{display:'flex',gap: isMobile?16:32,justifyContent:'center',
-        alignItems:'flex-end',width:'100%',maxWidth: isMobile?320:500}}>
+      <div style={{display:'flex',gap: isMobile?12:32,justifyContent:'center',
+        alignItems:'flex-end',width:'100%',maxWidth: isMobile?360:500}}>
         {Object.entries(CANDS).map(([key,c])=>(
-          <div key={key} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:8}}>
-            <div style={{width:'100%',maxWidth: isMobile?120:180,aspectRatio:'1',position:'relative',
+          <div key={key} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:isMobile?6:8}}>
+            <div style={{width:'100%',maxWidth: isMobile?140:180,aspectRatio:'1',position:'relative',
               border:`2px solid ${c.colorBorder}`,boxShadow:`0 0 20px ${c.color}22`}}>
               <video autoPlay loop muted playsInline src={`/${c.char}-idle.mp4`}
                 style={{width:'100%',height:'100%',imageRendering:'pixelated',display:'block'}}/>
             </div>
             <div style={{textAlign:'center'}}>
-              <div style={{fontFamily:'var(--pixel)',fontSize: isMobile?'6px':'7px',color:c.color,marginBottom:3}}>
+              <div style={{fontFamily:'var(--pixel)',fontSize: isMobile?'7px':'7px',color:c.color,marginBottom:3}}>
                 {c.alias.toUpperCase()}
               </div>
-              {!isMobile&&<div style={{fontSize:'11px',color:'#8888A0'}}>{c.name}</div>}
+              <div style={{fontSize: isMobile?'10px':'11px',color:'#8888A0',lineHeight:1.3}}>{c.name}</div>
+              {isMobile&&<div style={{fontSize:'9px',color:'#5A5A52',marginTop:2}}>{c.party}</div>}
             </div>
           </div>
         ))}
@@ -170,21 +171,23 @@ function WelcomeScreen({onEnter}:{onEnter:()=>void}){
 
       {/* Descripción */}
       <div style={{maxWidth:480,textAlign:'center',padding:'0 8px'}}>
-        <p style={{fontSize: isMobile?'12px':'13px',color:'#8888A0',lineHeight:1.8}}>
+        <p style={{fontSize: isMobile?'13px':'13px',color:'#8888A0',lineHeight:1.8}}>
           Compara las propuestas electorales de los candidatos colombianos contra documentos académicos e institucionales sobre las necesidades reales del país.
         </p>
       </div>
 
       {/* Cómo funciona */}
-      <div style={{display:'flex',gap:10,flexWrap:'wrap',justifyContent:'center',
-        maxWidth:560,width:'100%',padding:'0 8px'}}>
+      <div style={{display:'grid',
+        gridTemplateColumns: isMobile?'1fr 1fr':'1fr 1fr 1fr',
+        gap:10,maxWidth:560,width:'100%',padding:'0 8px'}}>
         {[
-          {n:'01',t:'Elige candidato',d:'Consulta a uno o a ambos candidatos'},
-          {n:'02',t:'Haz tu pregunta',d:'En lenguaje natural, sin tecnicismos'},
-          {n:'03',t:'Recibe análisis',d:'Basado en documentos oficiales y académicos'},
-        ].map(s=>(
-          <div key={s.n} style={{flex: isMobile?'1 1 100%':'1 1 140px',padding:'12px',
-            background:'#151525',border:'1px solid #2A2A42',textAlign:'center'}}>
+          {n:'01',t:'Elige candidato',d:'Consulta a uno o ambos'},
+          {n:'02',t:'Haz tu pregunta',d:'En lenguaje natural'},
+          {n:'03',t:'Recibe análisis',d:'Basado en documentos oficiales'},
+        ].map((s,i)=>(
+          <div key={s.n} style={{padding:'12px',
+            background:'#151525',border:'1px solid #2A2A42',textAlign:'center',
+            gridColumn: isMobile&&i===2?'1 / -1':undefined}}>
             <div style={{fontFamily:'var(--pixel)',fontSize:'12px',color:'#F0A020',marginBottom:8}}>{s.n}</div>
             <div style={{fontFamily:'var(--pixel)',fontSize:'6px',color:'#C8C8D4',marginBottom:6,lineHeight:1.8}}>{s.t.toUpperCase()}</div>
             <div style={{fontSize:'11px',color:'#5A5A72',lineHeight:1.6}}>{s.d}</div>
@@ -449,47 +452,86 @@ function MainApp(){
           <div style={{padding: isMobile?'8px 12px':'16px 16px 10px',
             borderBottom:'1px solid #2A2A42',background:'#0A0A14',flexShrink:0}}>
 
-            {/* Personajes: solo en desktop */}
+            {/* Desktop: character panels + filtro de texto */}
             {!isMobile&&(
-              <div style={{display:'flex',gap:20,justifyContent:'center',maxWidth:500,margin:'0 auto'}}>
-                <CharPanel char="jaguar" state={jagState} active={jagActive}
-                  color={CANDS['ivan-cepeda'].color} maxSize={charSize}/>
-                <div style={{display:'flex',alignItems:'center',padding:'0 2px'}}>
-                  <span style={{fontFamily:'var(--pixel)',fontSize:'8px',color:'#2A2A42'}}>VS</span>
+              <>
+                <div style={{display:'flex',gap:20,justifyContent:'center',maxWidth:500,margin:'0 auto'}}>
+                  <CharPanel char="jaguar" state={jagState} active={jagActive}
+                    color={CANDS['ivan-cepeda'].color} maxSize={charSize}/>
+                  <div style={{display:'flex',alignItems:'center',padding:'0 2px'}}>
+                    <span style={{fontFamily:'var(--pixel)',fontSize:'8px',color:'#2A2A42'}}>VS</span>
+                  </div>
+                  <CharPanel char="tigre" state={tigState} active={tigActive}
+                    color={CANDS['abelardo'].color} maxSize={charSize}/>
                 </div>
-                <CharPanel char="tigre" state={tigState} active={tigActive}
-                  color={CANDS['abelardo'].color} maxSize={charSize}/>
-              </div>
+                <div style={{display:'flex',gap:8,justifyContent:'center',marginTop:14,flexWrap:'wrap'}}>
+                  {([
+                    {key:'all',label:'AMBOS',color:'#5A5A72',border:'#3A3A52'},
+                    {key:'ivan-cepeda',label:'EL JAGUAR',color:CANDS['ivan-cepeda'].color,border:CANDS['ivan-cepeda'].colorBorder},
+                    {key:'abelardo',label:'EL TIGRE',color:CANDS['abelardo'].color,border:CANDS['abelardo'].colorBorder},
+                  ] as const).map(o=>(
+                    <button key={o.key} onClick={()=>setCandidate(o.key)} style={{
+                      fontFamily:'var(--pixel)',fontSize:'6px',padding:'7px 14px',
+                      background:candidate===o.key?o.color:'transparent',
+                      color:candidate===o.key?'#0E0E1A':o.color,
+                      border:`2px solid ${o.border}`,cursor:'pointer',transition:'all 0.15s'}}>
+                      {o.label}
+                    </button>
+                  ))}
+                </div>
+              </>
             )}
 
-            {/* Estado en móvil (reemplaza personajes) */}
-            {isMobile&&(loading||jagState!=='idle')&&(
-              <div style={{textAlign:'center',marginBottom:6}}>
-                <span style={{fontFamily:'var(--pixel)',fontSize:'6px',color:bubbleColor}}>
-                  {jagState==='thinking'?'● PENSANDO...':jagState==='responding'?'● RESPONDIENDO...':''}
-                </span>
-              </div>
-            )}
-
-            {/* Candidate filter */}
-            <div style={{display:'flex',gap: isMobile?6:8,justifyContent:'center',
-              marginTop: isMobile?0:14,flexWrap:'wrap'}}>
-              {([
-                {key:'all',label:'AMBOS',color:'#5A5A72',border:'#3A3A52'},
-                {key:'ivan-cepeda',label:'EL JAGUAR',color:CANDS['ivan-cepeda'].color,border:CANDS['ivan-cepeda'].colorBorder},
-                {key:'abelardo',label:'EL TIGRE',color:CANDS['abelardo'].color,border:CANDS['abelardo'].colorBorder},
-              ] as const).map(o=>(
-                <button key={o.key} onClick={()=>setCandidate(o.key)} style={{
-                  fontFamily:'var(--pixel)',fontSize:'6px',
-                  padding: isMobile?'10px 14px':'7px 14px',
-                  minHeight: isMobile?40:undefined,
-                  background:candidate===o.key?o.color:'transparent',
-                  color:candidate===o.key?'#0E0E1A':o.color,
-                  border:`2px solid ${o.border}`,cursor:'pointer',transition:'all 0.15s'}}>
-                  {o.label}
+            {/* Móvil: tarjetas visuales con imagen PNG + texto legible */}
+            {isMobile&&(
+              <div style={{display:'flex',gap:8,width:'100%'}}>
+                {/* Botón AMBOS */}
+                <button onClick={()=>setCandidate('all')} style={{
+                  flexShrink:0,display:'flex',flexDirection:'column',alignItems:'center',
+                  justifyContent:'center',gap:3,padding:'8px',width:60,
+                  background:candidate==='all'?'rgba(240,160,32,0.15)':'#151525',
+                  border:`2px solid ${candidate==='all'?'#F0A020':'#2A2A42'}`,
+                  cursor:'pointer',transition:'all 0.15s'}}>
+                  <span style={{fontSize:'16px',lineHeight:1}}>⚡</span>
+                  <span style={{fontFamily:'var(--pixel)',fontSize:'5px',
+                    color:candidate==='all'?'#F0A020':'#5A5A72',lineHeight:1.4}}>AMBOS</span>
                 </button>
-              ))}
-            </div>
+                {/* Tarjetas de candidatos */}
+                {(Object.entries(CANDS) as [keyof typeof CANDS, typeof CANDS[keyof typeof CANDS]][]).map(([key,c])=>{
+                  const isActive=candidate===key;
+                  const isResponding=key==='ivan-cepeda'?jagState!=='idle':tigState!=='idle';
+                  return(
+                    <button key={key} onClick={()=>setCandidate(candidate===key?'all':key)}
+                      style={{flex:1,display:'flex',alignItems:'center',gap:10,padding:'8px 10px',
+                        background:isActive?c.colorBg:'#151525',
+                        border:`2px solid ${isActive?c.color:'#2A2A42'}`,
+                        cursor:'pointer',transition:'all 0.15s',textAlign:'left',minHeight:60}}>
+                      <div style={{position:'relative',flexShrink:0}}>
+                        <img src={c.img} alt={c.alias}
+                          style={{width:44,height:44,imageRendering:'pixelated',display:'block',
+                            border:`2px solid ${isActive?c.color:'#2A2A42'}`}}/>
+                        {isResponding&&(
+                          <div style={{position:'absolute',bottom:-2,right:-2,width:8,height:8,
+                            borderRadius:'50%',background:c.color,
+                            boxShadow:`0 0 6px ${c.color}`}}/>
+                        )}
+                      </div>
+                      <div style={{minWidth:0}}>
+                        <div style={{fontFamily:'var(--pixel)',fontSize:'6px',color:c.color,
+                          marginBottom:2,letterSpacing:'0.05em'}}>{c.alias.toUpperCase()}</div>
+                        <div style={{fontSize:'11px',color:isActive?'#C8C8D4':'#6A6A82',
+                          lineHeight:1.3,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>
+                          {c.name}
+                        </div>
+                        <div style={{fontSize:'9px',color:isActive?c.color:'#3A3A52',marginTop:1}}>
+                          {c.party}
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* Tabs */}
@@ -561,7 +603,9 @@ function MainApp(){
               </div>
 
               {/* Input */}
-              <div style={{padding: isMobile?'10px 12px':'12px',
+              <div style={{
+                padding: isMobile?'10px 12px':'12px',
+                paddingBottom: isMobile?'calc(10px + env(safe-area-inset-bottom))':'12px',
                 borderTop:'1px solid #2A2A42',display:'flex',gap:8,flexShrink:0}}>
                 <input value={input} onChange={e=>setInput(e.target.value)}
                   onKeyDown={e=>e.key==='Enter'&&!e.shiftKey&&sendMessage(input)}
