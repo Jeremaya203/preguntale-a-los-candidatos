@@ -1,6 +1,6 @@
 """
-search.py — Búsqueda híbrida con Cross-Encoder re-ranking
-BM25 + Vectorial + RRF + Cross-Encoder multilingüe = máxima precisión
+search.py — Búsqueda híbrida BM25 + Vectorial + RRF
+3 etapas (sin cross-encoder para mantener uso de RAM bajo 1 GB en Railway).
 """
 
 import pickle
@@ -8,7 +8,7 @@ import pathlib
 from typing import List, Dict, Any, Optional
 
 import chromadb
-from sentence_transformers import SentenceTransformer, CrossEncoder
+from sentence_transformers import SentenceTransformer
 from utils import tokenize
 
 # ─── Configuración ──────────────────────────────────────────────────────────
@@ -17,24 +17,16 @@ CHROMA_DIR      = str(BASE_DIR / "chroma_db")
 BM25_PATH       = str(BASE_DIR / "bm25_index.pkl")
 COLLECTION      = "candidatos_docs"
 EMBED_MODEL     = "paraphrase-multilingual-MiniLM-L12-v2"
-RERANKER_MODEL  = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"  # Multilingüe ES+EN
 K_RRF           = 60
-N_CANDIDATES    = 40   # Candidatos antes del re-ranking
-TOP_K_DEFAULT   = 6    # Resultados finales
+N_CANDIDATES    = 40
+TOP_K_DEFAULT   = 6
 
 
 class HybridSearch:
     def __init__(self):
         print("🔍 Cargando motor de búsqueda...")
 
-        # Modelo de embeddings (bi-encoder)
         self.model = SentenceTransformer(EMBED_MODEL)
-
-        # Cross-encoder para re-ranking de alta precisión
-        print("   🎯 Cargando cross-encoder multilingüe...")
-        print("      (primera vez: descarga ~67MB, luego queda en caché)")
-        self.reranker = CrossEncoder(RERANKER_MODEL)
-        print("   ✅ Cross-encoder listo")
 
         # ChromaDB
         client = chromadb.PersistentClient(path=CHROMA_DIR)
@@ -60,11 +52,10 @@ class HybridSearch:
         tipo: Optional[str] = None,
     ) -> List[Dict[str, Any]]:
         """
-        Búsqueda en 4 etapas:
+        Búsqueda en 3 etapas:
         1. BM25: top N_CANDIDATES por palabras clave
         2. Vectorial: top N_CANDIDATES por similitud semántica
-        3. RRF: fusión de rankings
-        4. Cross-encoder: re-ranking de precisión sobre los top 40
+        3. RRF: fusión de rankings → top_k resultados finales
         """
         n = min(N_CANDIDATES, self.collection.count())
 
@@ -114,29 +105,11 @@ class HybridSearch:
             )
             for doc_id in all_ids
         }
-        fused_ids = sorted(rrf, key=rrf.get, reverse=True)[:N_CANDIDATES]
+        fused_ids = sorted(rrf, key=rrf.get, reverse=True)[:top_k]
 
-        # ── 4. Cross-Encoder Re-Ranking ───────────────────────────────────
         meta_index = {m["id"]: m for m in self.metadata}
-
-        # Construir pares (query, texto) para el cross-encoder
-        candidates = [cid for cid in fused_ids if cid in meta_index]
-        if not candidates:
-            return []
-
-        pairs  = [(query, meta_index[cid]["text"]) for cid in candidates]
-        scores = self.reranker.predict(pairs, show_progress_bar=False)
-
-        # Ordenar por score del cross-encoder (más preciso que RRF)
-        ranked = sorted(
-            zip(candidates, scores),
-            key=lambda x: x[1],
-            reverse=True
-        )
-
-        # Construir resultados finales
         results = []
-        for cid, score in ranked[:top_k]:
+        for cid in fused_ids:
             if cid not in meta_index:
                 continue
             m = meta_index[cid]
@@ -148,7 +121,7 @@ class HybridSearch:
                 "tipo":      m["tipo"],
                 "candidato": m["candidato"],
                 "lang":      m["lang"],
-                "score":     round(float(score), 4),
+                "score":     round(rrf[cid], 4),
             })
 
         return results
