@@ -19,6 +19,7 @@ from docx import Document as DocxDocument
 import chromadb
 from sentence_transformers import SentenceTransformer
 from rank_bm25 import BM25Okapi
+from utils import tokenize
 
 # ─── Configuración agresiva ─────────────────────────────────────────────────
 BASE_DIR    = pathlib.Path(__file__).parent
@@ -208,7 +209,7 @@ def main():
                 "lang":      meta["lang"],
             }
             all_texts.append(chunk)
-            all_tokenized.append(chunk.lower().split())
+            all_tokenized.append(tokenize(chunk))
             all_metadata.append({**cmeta, "id": cid, "text": chunk})
             chroma_ids.append(cid)
             chroma_metas.append(cmeta)

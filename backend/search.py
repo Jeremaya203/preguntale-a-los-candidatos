@@ -9,6 +9,7 @@ from typing import List, Dict, Any, Optional
 
 import chromadb
 from sentence_transformers import SentenceTransformer, CrossEncoder
+from utils import tokenize
 
 # ─── Configuración ──────────────────────────────────────────────────────────
 BASE_DIR        = pathlib.Path(__file__).parent
@@ -68,7 +69,7 @@ class HybridSearch:
         n = min(N_CANDIDATES, self.collection.count())
 
         # ── 1. BM25 ───────────────────────────────────────────────────────
-        tokens      = query.lower().split()
+        tokens      = tokenize(query)
         bm25_scores = self.bm25.get_scores(tokens)
 
         bm25_ranked = [

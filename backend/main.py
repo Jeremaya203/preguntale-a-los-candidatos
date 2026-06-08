@@ -69,14 +69,17 @@ class AnalyzeRequest(BaseModel):
     candidatos: List[str] = ["ivan-cepeda", "abelardo"]
 
 search_engine: Optional[HybridSearch] = None
+groq_client:   Optional[Groq]         = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global search_engine
+    global search_engine, groq_client
     try:
         search_engine = HybridSearch()
     except Exception as e:
         print(f"⚠️  Motor de búsqueda no disponible: {e}")
+    if GROQ_API_KEY:
+        groq_client = Groq(api_key=GROQ_API_KEY)
     yield
 
 app = FastAPI(title="Pregúntale a los Candidatos", lifespan=lifespan)
@@ -116,7 +119,7 @@ def health():
 
 @app.post("/chat")
 async def chat(req: ChatRequest):
-    if not GROQ_API_KEY:
+    if not groq_client:
         raise HTTPException(500, "GROQ_API_KEY no configurada")
     if not search_engine:
         raise HTTPException(503, "Ejecuta indexer.py primero.")
@@ -138,11 +141,11 @@ async def chat(req: ChatRequest):
     if base_analysis:
         # Pregunta temática: análisis precalculado + fragmentos RAG
         user_prompt = f"""ANÁLISIS COMPLETO SOBRE {detected_dim.upper().replace("_"," ")} (ÚSALO COMO BASE PRINCIPAL):
-{base_analysis[:4000]}
+{base_analysis[:6000]}
 
 ---
 FRAGMENTOS ADICIONALES DEL RAG ({n} encontrados — usa solo si añaden información nueva no cubierta arriba):
-{context[:2000]}
+{context[:4000]}
 
 ---
 PREGUNTA DEL USUARIO: {query}
@@ -160,12 +163,11 @@ Responde de forma completa basándote principalmente en el ANÁLISIS COMPLETO. C
 
     async def stream():
         try:
-            client = Groq(api_key=GROQ_API_KEY)
-            response = client.chat.completions.create(
+            response = groq_client.chat.completions.create(
                 model=GROQ_MODEL,
                 messages=[{"role":"system","content":SYSTEM_CHAT},
                           {"role":"user","content":user_prompt}],
-                stream=True, max_tokens=800, temperature=0.2)
+                stream=True, max_tokens=1200, temperature=0.2)
             for chunk in response:
                 c = chunk.choices[0].delta.content
                 if c:
@@ -183,19 +185,12 @@ async def analyze(req: AnalyzeRequest):
     analysis_file = BASE_DIR / "analyses" / f"{slug}.json"
 
     if analysis_file.exists():
-        data    = json.loads(analysis_file.read_text(encoding="utf-8"))
-        content = data["content"]
-        async def stream_precalc():
-            words = content.split(" ")
-            chunk = ""
-            for i, w in enumerate(words):
-                chunk += w + " "
-                if len(chunk) > 120 or i == len(words)-1:
-                    yield chunk
-                    chunk = ""
-        return StreamingResponse(stream_precalc(), media_type="text/plain; charset=utf-8")
+        content = json.loads(analysis_file.read_text(encoding="utf-8"))["content"]
+        return StreamingResponse(iter([content]), media_type="text/plain; charset=utf-8")
 
     # Fallback Groq si no hay precalculado
+    if not groq_client:
+        raise HTTPException(500, "GROQ_API_KEY no configurada")
     if not search_engine:
         raise HTTPException(503, "Base de documentos no indexada.")
     ref_results        = search_engine.search(dim, top_k=6, tipo="referencia")
@@ -212,8 +207,7 @@ async def analyze(req: AnalyzeRequest):
     user_prompt = f"DIMENSIÓN: {dim.upper()}\nREFERENCIA:\n{ref_context}\n{'='*40}\n{''.join(secciones)}\nGenera análisis con secciones: 1.Contexto 2.Propuesta Iván 3.Propuesta Abelardo 4.Contraste 5.Fuentes"
     async def stream_groq():
         try:
-            client = Groq(api_key=GROQ_API_KEY)
-            r = client.chat.completions.create(
+            r = groq_client.chat.completions.create(
                 model=GROQ_MODEL,
                 messages=[{"role":"system","content":SYSTEM_CHAT},{"role":"user","content":user_prompt}],
                 stream=True, max_tokens=3000, temperature=0.2)
