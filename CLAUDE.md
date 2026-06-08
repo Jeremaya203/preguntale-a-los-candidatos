@@ -18,9 +18,10 @@ npm run lint      # ESLint (Next.js core-web-vitals + TypeScript)
 
 ### Backend (FastAPI + Python)
 ```bash
-cd backend
-python indexer.py   # Index documents into ChromaDB + BM25 (run after adding documents)
-python main.py      # Dev server with uvicorn reload on port 8000
+# Run from project root with venv activated
+source venv/bin/activate
+python backend/indexer.py   # Index documents into ChromaDB + BM25 (run after adding documents)
+python backend/main.py      # Dev server with uvicorn reload on port 8000
 ```
 
 ### Deployment
@@ -35,13 +36,13 @@ python main.py      # Dev server with uvicorn reload on port 8000
 
 ### Stack
 - **Frontend**: Next.js 16 + React 19, TypeScript, Tailwind CSS 4
-- **Backend**: FastAPI + Uvicorn, Groq API (Llama 4 Scout 17B), ChromaDB, Sentence Transformers
+- **Backend**: FastAPI + Uvicorn, Groq API (`meta-llama/llama-4-scout-17b-16e-instruct`), ChromaDB, Sentence Transformers
 - **Search**: 4-stage hybrid retrieval — BM25 → vector embeddings → RRF fusion → cross-encoder reranking
-- **Deploy**: Heroku via `Procfile` (single web process, FastAPI only)
+- **Deploy**: Railway via `railway.toml` (backend only); Vercel for frontend
 
 ### Request Flow
 
-1. User types in the chat → `frontend/app/page.tsx` (monolithic 542-line component)
+1. User types in the chat → `frontend/app/page.tsx` (monolithic component)
 2. Frontend POSTs to `/api/chat` → Next.js route proxy in `frontend/app/api/chat/route.ts`
 3. Proxy forwards to FastAPI `POST /chat` in `backend/main.py`
 4. Backend detects policy dimension (keyword matching against 12 hardcoded dimensions)
@@ -59,6 +60,7 @@ The `/analyze` endpoint follows the same dimension detection → pre-calc lookup
 | `backend/main.py` | FastAPI app, `/chat`, `/analyze`, `/health` endpoints |
 | `backend/search.py` | `HybridSearch` class — 4-stage retrieval logic |
 | `backend/indexer.py` | Document ingestion pipeline (PDF/DOCX/TXT → ChromaDB + BM25) |
+| `backend/utils.py` | Shared `tokenize()` function + Spanish stopwords (used by both indexer and search) |
 | `backend/analyses/*.json` | Pre-calculated analyses for 12 policy dimensions |
 | `frontend/app/page.tsx` | Entire UI: chat tabs, candidate filter, streaming display |
 | `frontend/app/api/*/route.ts` | Next.js proxy routes to backend |
@@ -69,7 +71,7 @@ The `HybridSearch` class performs:
 1. **BM25** — keyword retrieval (`rank_bm25.BM25Okapi`)
 2. **Vector** — semantic similarity via ChromaDB + `paraphrase-multilingual-MiniLM-L12-v2`
 3. **RRF fusion** — merges rankings using `1/(60 + rank)` to avoid bias toward either method
-4. **Cross-encoder reranking** — `mmarco-mMiniLMv2-L12-H384-v1` for final precision scoring
+4. **Cross-encoder reranking** — `mmarco-mMiniLMv2-L12-H384-v1` for final precision scoring on top 40 candidates
 
 ### Indexing Pipeline (backend/indexer.py)
 
@@ -77,11 +79,33 @@ Documents go through: extraction (PyMuPDF/python-docx) → aggressive text clean
 
 Each stored chunk carries metadata: `title`, `source`, `tipo` (`candidato`/`referencia`), `candidato`, `lang`.
 
-After adding any documents to `backend/documents/`, re-run `python indexer.py` to rebuild `chroma_db/` and `bm25_index.pkl`.
+Document folder structure under `backend/documents/`:
+- `candidatos/ivan-cepeda/` → tipo=candidato, candidato=ivan-cepeda
+- `candidatos/abelardo/` → tipo=candidato, candidato=abelardo
+- `referencia/` → tipo=referencia (optionally `referencia/en/` for English docs)
+
+After adding any documents to `backend/documents/`, re-run `python backend/indexer.py` to rebuild `chroma_db/` and `bm25_index.pkl`.
 
 ### Policy Dimensions
 
-12 hardcoded dimensions detected via keyword matching in `backend/main.py`: `economia`, `educacion`, `salud`, `seguridad`, `medio_ambiente`, `agricultura`, `empleo`, `infraestructura`, `cultura`, `innovacion`, `paz`, `social`. Pre-calculated analyses live in `backend/analyses/<dimension>.json`.
+12 dimensions detected via keyword matching in `backend/main.py` (`DIM_KEYWORDS`) and mapped to JSON files via `DIM_MAP`:
+
+| Slug (file name) | Display name |
+|---|---|
+| `economia` | Economía |
+| `educacion` | Educación |
+| `salud` | Salud |
+| `paz_y_seguridad` | Paz y seguridad |
+| `medio_ambiente` | Medio ambiente |
+| `empleo` | Empleo |
+| `vivienda` | Vivienda |
+| `innovacion` | Innovación |
+| `agricultura` | Agricultura |
+| `justicia` | Justicia |
+| `cultura` | Cultura |
+| `infraestructura` | Infraestructura |
+
+Pre-calculated analyses live in `backend/analyses/<slug>.json` with a `"content"` key.
 
 ### UI Notes
 
@@ -89,3 +113,4 @@ After adding any documents to `backend/documents/`, re-run `python indexer.py` t
 - Retro pixel-art aesthetic: Press Start 2P font, scanlines, animated video characters (jaguar/tigre per candidate)
 - Candidate filter toggles which candidate's documents are included in RAG context
 - Streaming responses decoded with `TextDecoder` and rendered incrementally via `useState`
+- Sources are embedded in the stream as an HTML comment: `<!--SOURCES:[...]-->` and parsed client-side
