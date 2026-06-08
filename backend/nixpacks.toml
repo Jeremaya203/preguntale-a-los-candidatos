@@ -1,0 +1,6 @@
+[phases.install]
+cmds = [
+  "python3 -m venv --copies /opt/venv",
+  "/opt/venv/bin/pip install torch --index-url https://download.pytorch.org/whl/cpu",
+  "/opt/venv/bin/pip install -r requirements.txt"
+]
