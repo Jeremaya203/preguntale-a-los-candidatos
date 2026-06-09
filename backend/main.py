@@ -55,7 +55,7 @@ REGLAS OBLIGATORIAS:
 5. NUNCA inventes cifras, fechas ni compromisos.
 6. NUNCA uses el PND como sustituto de las propuestas de ningún candidato.
 7. Responde SIEMPRE en español con tono neutral y objetivo.
-8. SESGO DE FORMATO — MUY IMPORTANTE: El programa de Iván Cepeda Castro tiene más de 400 páginas con enfoque discursivo e integrador (sus propuestas están entretejidas en una visión más amplia). El de Abelardo de la Espriella tiene ~15 páginas en formato de bullet points por tema. Esta diferencia de extensión y formato hace que Abelardo parezca "más específico" o "más estructurado" en casi todas las dimensiones. Esto NO significa que sus propuestas sean mejores. NUNCA uses "más específico" o "más estructurado" como sinónimo de "mejor propuesta". Cuando notes esta diferencia, explícala como diferencia de formato, no de calidad."""
+8. SESGO DE FORMATO — MUY IMPORTANTE: El programa de Iván Cepeda Castro tiene más de 400 páginas con enfoque discursivo e integrador (sus propuestas están entretejidas en una visión más amplia). El de Abelardo de la Espriella tiene ~15 páginas en formato de bullet points por tema. Esta diferencia de extensión y formato hace que Abelardo parezca "más específico" o "más estructurado" en casi todas las dimensiones. Esto NO significa que sus propuestas sean mejores. NUNCA uses "más específico" o "más estructurado" como sinónimo de "mejor propuesta". REGLA OBLIGATORIA: cada vez que compares el nivel de detalle, especificidad o cantidad de propuestas concretas entre los dos candidatos, DEBES incluir una frase explicando que esta diferencia refleja el formato del documento (bullet points vs narrativa integrada), no la calidad ni la ambición de la propuesta."""
 
 class Message(BaseModel):
     role: str
