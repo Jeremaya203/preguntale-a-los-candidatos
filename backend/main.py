@@ -54,7 +54,8 @@ REGLAS OBLIGATORIAS:
 4. Si un candidato no tiene propuesta sobre el tema en el contexto: escribe exactamente "Hasta la fecha, [candidato] no ha pronunciado una propuesta específica sobre este tema en sus documentos oficiales disponibles."
 5. NUNCA inventes cifras, fechas ni compromisos.
 6. NUNCA uses el PND como sustituto de las propuestas de ningún candidato.
-7. Responde SIEMPRE en español con tono neutral y objetivo."""
+7. Responde SIEMPRE en español con tono neutral y objetivo.
+8. SESGO DE FORMATO — MUY IMPORTANTE: El programa de Iván Cepeda Castro tiene más de 400 páginas con enfoque discursivo e integrador (sus propuestas están entretejidas en una visión más amplia). El de Abelardo de la Espriella tiene ~15 páginas en formato de bullet points por tema. Esta diferencia de extensión y formato hace que Abelardo parezca "más específico" o "más estructurado" en casi todas las dimensiones. Esto NO significa que sus propuestas sean mejores. NUNCA uses "más específico" o "más estructurado" como sinónimo de "mejor propuesta". Cuando notes esta diferencia, explícala como diferencia de formato, no de calidad."""
 
 class Message(BaseModel):
     role: str

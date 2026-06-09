@@ -640,6 +640,17 @@ function MainApp(){
                   textAlign:'center',letterSpacing:'0.1em'}}>
                   SELECCIONA UNA DIMENSIÓN PARA ANALIZAR
                 </p>
+                <div style={{background:'#0E0E1A',border:'1px solid #3A2A1A',padding:'10px 14px',
+                  display:'flex',gap:10,alignItems:'flex-start'}}>
+                  <span style={{color:'#C07020',fontSize:'11px',flexShrink:0,lineHeight:1}}>⚠</span>
+                  <p style={{fontFamily:'var(--pixel)',fontSize:'5px',color:'#7A5A3A',
+                    lineHeight:1.8,letterSpacing:'0.04em',margin:0}}>
+                    NOTA METODOLÓGICA: Iván Cepeda tiene un programa de 400+ páginas con visión integral —
+                    sus propuestas están entretejidas en una narrativa más amplia.
+                    Abelardo tiene ~15 páginas en formato de bullet points.
+                    Mayor especificidad aparente no equivale a mejor propuesta.
+                  </p>
+                </div>
                 <div style={{display:'flex',flexWrap:'wrap',gap: isMobile?6:8,justifyContent:'center'}}>
                   {DIMS.map(dim=>(
                     <button key={dim} onClick={()=>runAnalysis(dim)} disabled={analyzing} style={{
