@@ -2,7 +2,7 @@
 main.py — Pregúntale a los Candidatos
 Análisis precalculados + RAG híbrido + Groq streaming
 """
-import os, json, pathlib
+import os, re, json, pathlib
 from contextlib import asynccontextmanager
 from typing import List, Optional
 from fastapi import FastAPI, HTTPException
@@ -12,6 +12,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from groq import Groq
 from search import HybridSearch
+from terminos_juridicos import TERMINOS
 
 load_dotenv(pathlib.Path(__file__).parent / ".env")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
@@ -56,6 +57,100 @@ REGLAS OBLIGATORIAS:
 6. NUNCA uses el PND como sustituto de las propuestas de ningún candidato.
 7. Responde SIEMPRE en español con tono neutral y objetivo.
 8. SESGO DE FORMATO — MUY IMPORTANTE: El programa de Iván Cepeda Castro tiene más de 400 páginas con enfoque discursivo e integrador (sus propuestas están entretejidas en una visión más amplia). El de Abelardo de la Espriella tiene ~15 páginas en formato de bullet points por tema. Esta diferencia de extensión y formato hace que Abelardo parezca "más específico" o "más estructurado" en casi todas las dimensiones. Esto NO significa que sus propuestas sean mejores. NUNCA uses "más específico" o "más estructurado" como sinónimo de "mejor propuesta". REGLA OBLIGATORIA: cada vez que compares el nivel de detalle, especificidad o cantidad de propuestas concretas entre los dos candidatos, DEBES incluir una frase explicando que esta diferencia refleja el formato del documento (bullet points vs narrativa integrada), no la calidad ni la ambición de la propuesta."""
+
+# ─── Tooltips jurídicos (post-procesado determinístico) ────────────────────
+# En vez de pedirle al LLM que marque términos (inconsistente), anotamos toda
+# respuesta del LLM en el backend usando el diccionario local. Mismo motor que
+# anotar_analyses.py para los precalculados → comportamiento idéntico.
+_EXCLUIR_TOOLTIPS = {"paz", "ley", "aval"}  # genéricos: generan ruido visual
+
+def _build_tooltip_pattern() -> re.Pattern:
+    # Más largo primero: "acción de tutela" gana sobre "tutela".
+    terms = sorted(
+        (t for t in TERMINOS if t not in _EXCLUIR_TOOLTIPS),
+        key=len, reverse=True,
+    )
+    alt = "|".join(re.escape(t) for t in terms)
+    return re.compile(r"\b(" + alt + r")\b", re.IGNORECASE)
+
+TOOLTIP_PATTERN = _build_tooltip_pattern()
+
+# Caracteres de corte seguro para el streaming: un término jurídico es una
+# secuencia de palabras (letras + espacios), nunca contiene puntuación ni
+# saltos de línea. Cortar el buffer en uno de estos caracteres garantiza que
+# jamás partimos un término (ni siquiera uno multi-palabra) entre dos chunks.
+_FLUSH_CHARS = ".,;:!?…\n)"
+
+def aplicar_tooltips(texto: str, ya_anotados: Optional[set] = None) -> str:
+    """
+    Anota términos técnico-jurídicos con {{término::explicación}}.
+    Cada término se anota máximo UNA vez (usa `ya_anotados`, que puede
+    compartirse entre los chunks de un mismo stream). Ignora ocurrencias
+    que ya estén dentro de un {{...}}.
+    """
+    if ya_anotados is None:
+        ya_anotados = set()
+
+    def _reemplazar(match):
+        original = match.group(0)
+        clave    = original.lower()
+        if clave in ya_anotados:
+            return original
+        inicio = match.start()
+        prev   = texto[max(0, inicio - 2):inicio]
+        if prev.endswith("{{") or prev.endswith("::"):
+            return original
+        ya_anotados.add(clave)
+        return f"{{{{{original}::{TERMINOS[clave]}}}}}"
+
+    return TOOLTIP_PATTERN.sub(_reemplazar, texto)
+
+def annotate_token_stream(token_iter):
+    """
+    Envuelve un iterable de tokens del LLM y va emitiendo el texto anotado a
+    nivel de cláusula: cada vez que el buffer contiene un carácter de corte
+    seguro (`_FLUSH_CHARS`), emite hasta ahí ya anotado. Como esos caracteres
+    nunca aparecen dentro de un término, ningún término se parte entre chunks,
+    y el resultado es idéntico a anotar la respuesta completa de una vez.
+    El conjunto `ya` se comparte entre chunks → cada término se anota 1 sola vez.
+    """
+    buffer = ""
+    ya: set = set()
+    for c in token_iter:
+        if not c:
+            continue
+        buffer += c
+        cut = max(buffer.rfind(ch) for ch in _FLUSH_CHARS)
+        if cut >= 0:
+            yield aplicar_tooltips(buffer[:cut + 1], ya)
+            buffer = buffer[cut + 1:]
+    if buffer:
+        yield aplicar_tooltips(buffer, ya)
+
+# Reglas de fact-checking — solo se añaden cuando la pregunta es sobre desinformación.
+FC_RULES = """
+
+REGLAS PARA FACT-CHECKING:
+- Los fragmentos con CATEGORIA "fact-checking" son verificaciones de desinformación. Son evidencia de que algo fue DESMENTIDO, no de que un candidato lo hizo.
+- Nunca uses un artículo de fact-checking como evidencia de una acción real del candidato. Solo úsalos para responder preguntas sobre desinformación.
+- Si presentas fake news de un candidato, SIEMPRE presenta también el equivalente del otro candidato. Nunca de un solo lado.
+- Si no hay verificaciones de un candidato sobre ese tema específico, dilo explícitamente: "No encontré verificaciones equivalentes para [candidato] sobre este tema."""
+
+# Los tooltips ya no se piden al LLM: se aplican en el backend con
+# aplicar_tooltips(). SYSTEM_CHAT_FULL se mantiene como punto único de prompt.
+SYSTEM_CHAT_FULL = SYSTEM_CHAT
+
+# Palabras que indican que la pregunta es sobre desinformación / fake news.
+FC_KEYWORDS = [
+    "fake news", "mentira", "falso", "falsa", "inventaron", "inventó", "invento",
+    "acusación", "acusacion", "dijeron que", "es verdad que", "desmentir",
+    "verificar", "cierto que", "bulo", "montaje", "desinformación", "desinformacion",
+    "rumor", "circula", "viral",
+]
+
+def is_disinfo_query(query: str) -> bool:
+    q = query.lower()
+    return any(kw in q for kw in FC_KEYWORDS)
 
 class Message(BaseModel):
     role: str
@@ -121,7 +216,9 @@ def health():
     total = search_engine.collection.count()
     cands = sum(1 for m in search_engine.metadata if m["tipo"] == "candidato")
     refs  = sum(1 for m in search_engine.metadata if m["tipo"] == "referencia")
-    return {"status": "ok", "total": total, "candidatos": cands, "referencia": refs}
+    fc    = sum(1 for m in search_engine.metadata if m["tipo"] == "fact-checking")
+    return {"status": "ok", "total": total, "candidatos": cands,
+            "referencia": refs, "fact_checking": fc}
 
 @app.post("/chat")
 async def chat(req: ChatRequest):
@@ -143,6 +240,30 @@ async def chat(req: ChatRequest):
     context, n = build_context(results, req.candidato or "todos")
     sources = [{"title":r["title"],"tipo":r["tipo"],"candidato":r["candidato"],"lang":r["lang"]} for r in results]
 
+    # ── Fact-checking (si la pregunta es sobre desinformación) ────────────
+    # Buscamos de forma BALANCEADA: ambos candidatos + general, sin importar
+    # el filtro de candidato, para cumplir la regla de no presentar un solo lado.
+    disinfo  = is_disinfo_query(query)
+    fc_block = ""
+    if disinfo:
+        fc_results = []
+        for cat in ("contra_cepeda", "contra_espriella", "general"):
+            fc_results.extend(
+                search_engine.search(query, top_k=2, tipo="fact-checking", categoria=cat)
+            )
+        if fc_results:
+            fc_ctx, _ = build_context(fc_results, "fact-checking")
+            fc_block = (
+                "\n\nVERIFICACIONES DE DESINFORMACIÓN (fact-checking — son DESMENTIDOS "
+                "de afirmaciones falsas, NO pruebas de que el candidato lo hizo):\n"
+                f"{fc_ctx[:4000]}"
+            )
+            sources += [
+                {"title": r["title"], "tipo": "fact-checking",
+                 "candidato": r.get("candidato", ""), "lang": r["lang"]}
+                for r in fc_results
+            ]
+
     # ── Construir prompt híbrido ───────────────────────────────────────────
     if base_analysis:
         # Pregunta temática: análisis precalculado + fragmentos RAG
@@ -162,22 +283,34 @@ Responde de forma completa basándote principalmente en el ANÁLISIS COMPLETO. C
         aviso = f"\n⚠️ Solo {n} fragmento(s) encontrado(s)." if n < 2 else ""
         user_prompt = f"CONTEXTO ({n} fragmentos):{aviso}\n{context}\n\nPREGUNTA: {query}"
 
-    if n == 0 and not base_analysis:
+    # Añadir verificaciones de fact-checking al prompt si las hay
+    if fc_block:
+        user_prompt += fc_block + ("\n\nResponde la PREGUNTA aplicando las REGLAS PARA "
+                                   "FACT-CHECKING de forma balanceada para ambos candidatos.")
+
+    if n == 0 and not base_analysis and not fc_block:
         async def no_results():
             yield "No encontré documentos relevantes para tu pregunta en los documentos disponibles."
         return StreamingResponse(no_results(), media_type="text/plain; charset=utf-8")
 
+    system_content = SYSTEM_CHAT_FULL + (FC_RULES if disinfo else "")
+
+    def _groq_tokens():
+        response = groq_client.chat.completions.create(
+            model=GROQ_MODEL,
+            messages=[{"role":"system","content":system_content},
+                      {"role":"user","content":user_prompt}],
+            stream=True, max_tokens=1200, temperature=0.2)
+        for chunk in response:
+            c = chunk.choices[0].delta.content
+            if c:
+                yield c
+
     async def stream():
         try:
-            response = groq_client.chat.completions.create(
-                model=GROQ_MODEL,
-                messages=[{"role":"system","content":SYSTEM_CHAT},
-                          {"role":"user","content":user_prompt}],
-                stream=True, max_tokens=1200, temperature=0.2)
-            for chunk in response:
-                c = chunk.choices[0].delta.content
-                if c:
-                    yield c
+            # Anota tooltips jurídicos sobre el texto del LLM (determinístico).
+            for piece in annotate_token_stream(_groq_tokens()):
+                yield piece
             yield f"\n\n<!--SOURCES:{json.dumps(sources, ensure_ascii=False)}-->"
         except Exception as e:
             yield f"\n\nError: {str(e)}"
@@ -211,15 +344,20 @@ async def analyze(req: AnalyzeRequest):
         aviso   = f"⛔ SIN fragmentos de {nombre}." if n == 0 else f"✅ {n} fragmentos."
         secciones.append(f"PROPUESTAS DE {nombre.upper()} ({aviso})\n{ctx}")
     user_prompt = f"DIMENSIÓN: {dim.upper()}\nREFERENCIA:\n{ref_context}\n{'='*40}\n{''.join(secciones)}\nGenera análisis con secciones: 1.Contexto 2.Propuesta Iván 3.Propuesta Abelardo 4.Contraste 5.Fuentes"
+    def _groq_tokens():
+        r = groq_client.chat.completions.create(
+            model=GROQ_MODEL,
+            messages=[{"role":"system","content":SYSTEM_CHAT_FULL},{"role":"user","content":user_prompt}],
+            stream=True, max_tokens=3000, temperature=0.2)
+        for chunk in r:
+            c = chunk.choices[0].delta.content
+            if c: yield c
     async def stream_groq():
         try:
-            r = groq_client.chat.completions.create(
-                model=GROQ_MODEL,
-                messages=[{"role":"system","content":SYSTEM_CHAT},{"role":"user","content":user_prompt}],
-                stream=True, max_tokens=3000, temperature=0.2)
-            for chunk in r:
-                c = chunk.choices[0].delta.content
-                if c: yield c
+            # El precalculado ya viene anotado por anotar_analyses.py; este
+            # fallback genera texto nuevo, así que se anota en vivo.
+            for piece in annotate_token_stream(_groq_tokens()):
+                yield piece
         except Exception as e:
             yield f"\n\nError: {str(e)}"
     return StreamingResponse(stream_groq(), media_type="text/plain; charset=utf-8")

@@ -1,0 +1,83 @@
+{
+  "generado": "2026-06-10T21:24:11.588037",
+  "total": 15,
+  "descargados": 15,
+  "errores": 0,
+  "balance": {
+    "counts": {
+      "contra_cepeda": 6,
+      "contra_espriella": 6,
+      "general": 3
+    },
+    "diferencia": 0,
+    "balanceado": true
+  },
+  "articulos": {
+    "contra_cepeda": [
+      {
+        "title": "El ELN no declaró apoyo a Cepeda ni amenazó con violencia si pierde",
+        "source": "EFE Verifica"
+      },
+      {
+        "title": "340 anuncios pagados en Meta para asociar a Cepeda con las FARC",
+        "source": "ColombiaCheck Investigaciones"
+      },
+      {
+        "title": "Video viral: Cepeda pedía respeto por organizaciones campesinas, no por las FARC",
+        "source": "El Filtro (AFP + El Tiempo)"
+      },
+      {
+        "title": "Mención de Cepeda en computadores de Raúl Reyes: contexto completo",
+        "source": "La Liga Contra el Silencio"
+      },
+      {
+        "title": "Falso: Cepeda prometió subir el salario mínimo a $5 millones",
+        "source": "ColombiaCheck"
+      },
+      {
+        "title": "El 70.24% atribuido a Cepeda es de sondeo sin metodología, no encuesta real",
+        "source": "ColombiaCheck"
+      }
+    ],
+    "contra_espriella": [
+      {
+        "title": "Falso: imágenes atribuyen a Espriella promesa de bajar salario mínimo",
+        "source": "ColombiaCheck"
+      },
+      {
+        "title": "Falso: Espriella prometió bajar salario a $800,000 como 'Bukele colombiano'",
+        "source": "ColombiaCheck"
+      },
+      {
+        "title": "Falsa cita: Espriella nunca prometió irse del país si no gana",
+        "source": "ColombiaCheck"
+      },
+      {
+        "title": "Falsa encuesta muestra a Espriella con 55.8% y a Cepeda con 8.5%",
+        "source": "ColombiaCheck"
+      },
+      {
+        "title": "Sondeo en redes infla a Espriella con 80% y circula como encuesta oficial",
+        "source": "ColombiaCheck"
+      },
+      {
+        "title": "Acusaciones infundadas de campaña Espriella contra periodistas independientes",
+        "source": "Cazadores de Fake News / Rutas del Conflicto"
+      }
+    ],
+    "general": [
+      {
+        "title": "Las fake news crecen como principal amenaza en la segunda vuelta",
+        "source": "El Tiempo / AFP (El Filtro)"
+      },
+      {
+        "title": "Las mentiras más virales sobre Cepeda, De la Espriella y Valencia",
+        "source": "La Silla Vacía - Detector de Mentiras"
+      },
+      {
+        "title": "Cómo detectar noticias falsas sobre Cepeda y Espriella",
+        "source": "Infobae / MOE"
+      }
+    ]
+  }
+}

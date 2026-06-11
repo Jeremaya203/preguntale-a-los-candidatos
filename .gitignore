@@ -12,3 +12,14 @@ node_modules/
 # Logs
 *.log
 .DS_Store
+
+# Scratch / artefactos locales (no versionar)
+dfdsfsdfsd}
+backend/_dump_fragments.py
+backend/*_patch.py
+backend/analyses_snapshot_*/
+backend/analyses_backup/
+
+# Índice generado — se reconstruye en el deploy con indexer.py (ver railway.toml)
+backend/chroma_db/
+backend/bm25_index.pkl

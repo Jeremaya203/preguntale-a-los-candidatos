@@ -1,5 +1,6 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
+import { parseTooltips } from '@/lib/parseTooltips';
 
 type Screen    = 'welcome' | 'app';
 type Tab       = 'chat' | 'analyze';
@@ -93,18 +94,22 @@ function SourcesPanel({sources}:{sources:Source[]}){
         <div style={{marginTop:6,display:'flex',flexDirection:'column',gap:4}}>
           {sources.map((s,i)=>{
             const isCand=s.tipo==='candidato';
+            const isFc=s.tipo==='fact-checking';
             const cInfo=s.candidato?CANDS[s.candidato as keyof typeof CANDS]:null;
-            const accent=cInfo?cInfo.color:'#5A5A72';
+            const accent=isFc?'#F59E0B':(cInfo?cInfo.color:'#5A5A72');
+            const badgeLabel=isFc?'FACT-CHECK':(isCand?(cInfo?.alias||s.candidato):'REF');
+            const badgeBg=isFc?'rgba(245,158,11,0.1)':(cInfo?cInfo.colorBg:'#2A2A42');
+            const badgeBorder=isFc?'rgba(245,158,11,0.35)':(cInfo?cInfo.colorBorder:'#3A3A52');
             return(
               <div key={i} style={{display:'flex',alignItems:'center',gap:8,padding:'6px 10px',
                 background:'#1A1A2E',border:`1px solid #2A2A42`,fontSize:'11px'}}>
-                <span style={{color:accent,fontSize:'9px'}}>{isCand?'◈':'◉'}</span>
+                <span style={{color:accent,fontSize:'9px'}}>{isFc?'🛡':(isCand?'◈':'◉')}</span>
                 <span style={{color:'#C8C8D4',flex:1,overflow:'hidden',
                   textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{s.title}</span>
                 <span style={{fontFamily:'var(--pixel)',fontSize:'5px',padding:'2px 6px',
-                  background:cInfo?cInfo.colorBg:'#2A2A42',
-                  color:accent,border:`1px solid ${cInfo?cInfo.colorBorder:'#3A3A52'}`,whiteSpace:'nowrap'}}>
-                  {isCand?(cInfo?.alias||s.candidato):'REF'}
+                  background:badgeBg,
+                  color:accent,border:`1px solid ${badgeBorder}`,whiteSpace:'nowrap'}}>
+                  {badgeLabel}
                 </span>
                 {s.lang==='en'&&(
                   <span style={{fontFamily:'var(--pixel)',fontSize:'5px',padding:'2px 6px',
@@ -226,9 +231,9 @@ function AnalysisContent({text}:{text:string}){
           return<div key={i} style={{fontFamily:'var(--pixel)',fontSize:'9px',color:'#F0A020',
             marginTop:16,marginBottom:8,lineHeight:1.8}}>{line.slice(2)}</div>;
         if(line.startsWith('- ')||line.startsWith('* '))
-          return<div key={i} style={{paddingLeft:14,marginBottom:3,color:'#C8C8D4'}}>▸ {line.slice(2)}</div>;
+          return<div key={i} style={{paddingLeft:14,marginBottom:3,color:'#C8C8D4'}}>▸ {parseTooltips(line.slice(2))}</div>;
         if(line==='') return<br key={i}/>;
-        return<p key={i} style={{marginBottom:3,color:'#C8C8D4'}}>{line}</p>;
+        return<p key={i} style={{marginBottom:3,color:'#C8C8D4'}}>{parseTooltips(line)}</p>;
       })}
     </div>
   );
@@ -589,7 +594,7 @@ function MainApp(){
                         border:`1px solid ${msg.role==='user'?bubbleColor:'#2A2A42'}`,
                         borderLeft:msg.role==='assistant'?`3px solid ${bubbleBorder}`:`1px solid ${bubbleColor}`,
                         color:'#C8C8D4'}}>
-                        {msg.content||(loading&&i===messages.length-1?(
+                        {msg.content?parseTooltips(msg.content):(loading&&i===messages.length-1?(
                           <span style={{fontFamily:'var(--pixel)',fontSize:'6px',color:bubbleColor}}>
                             procesando<span className="cursor">▋</span>
                           </span>

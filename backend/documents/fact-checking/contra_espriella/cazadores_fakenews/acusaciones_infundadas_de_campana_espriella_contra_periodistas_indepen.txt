@@ -1,0 +1,287 @@
+FUENTE: Cazadores de Fake News / Rutas del Conflicto
+FECHA_DESCARGA: 2026-06-10
+URL: https://rutasdelconflicto.com/notas/asi-opera-la-red-ataques-los-periodistas-critican-abelardo-la-espriella
+CATEGORIA: fact-checking / contra_espriella
+CANDIDATO_AFECTADO: Abelardo de la Espriella (generado por su campaña)
+TITULAR: Acusaciones infundadas de campaña Espriella contra periodistas independientes
+ACUSACION_FALSA: La Silla Vacía, Coronell y Cambio operan 'bodegas' coordinadas contra Espriella
+VEREDICTO: FALSO / DESMENTIDO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Nota
+Así opera la red de ataques contra los periodistas que critican a Abelardo de la Espriella
+Por La Liga contra el Silencio
+La Fundación para la Libertad de Prensa (FLIP) lo había advertido en distintos momentos:
+Abelardo de la Espriella ha mantenido durante más de una década un patrón reiterado de acciones judiciales contra periodistas
+. Entre 2008 y 2019, la Fiscalía registró 109 casos en los que el hoy candidato denunció a reporteros por injuria y calumnia. La mayoría de los casos terminaron archivados, desistidos o sin prosperar. Para la FLIP, ese uso expansivo de mecanismos legales podía configurar prácticas de acoso judicial, cuyo efecto no se mide en sentencias sino en desgaste, costos y autocensura.
+Ahora que Abelardo de la Espriella es candidato a la presidencia de Colombia, su viejo conflicto con la prensa se ha ampliado al mundo digital. Un análisis realizado por la Liga contra el Silencio en X muestra que, tras artículos periodísticos, se activa una conversación en la que participan cuentas del entorno del candidato y perfiles afines que publican y amplifican ataques contra periodistas.
+Entre los tuiteros se encuentran diversas cuentas con diferentes tipos de relaciones con la campaña. Encontramos desde personas relacionadas directamente con su campaña, incluyendo la del
+abogado
+de esta, Germán Calderón España, hasta influenciadores que lo han acompañado en sus giras por el país. En paralelo, en el portal
+defensoresdelapatria.com
+—identificado como una iniciativa de De la Espriella para
+“proteger la democracia”
+— se publican comunicados y columnas de opinión. Algunos de estos textos están firmados por Calderón España y otros columnistas como el senador electo por Salvación Nacional Alejandro Bermeo, influenciador y cofundador del movimiento Libertad Avanza Colombia.
+Precisamente, uno de estos comunicados fue citado en
+una carta enviada
+, en abril, al Secretario de Estado de Estados Unidos, Marco Rubio, y firmada por el candidato, en la que denuncia
+el trino
+del presidente Gustavo Petro por presuntamente espiar sus conversaciones telefónicas. Petro menciona conversaciones de inteligencia entre los hermanos Bautista (dueños de Thomas Greg & Sons) y el candidato presidencial Abelardo de la Espriella acerca de un supuesto fraude electoral.
+Aunque la carta se enfoca en denunciar que el presidente confesó que violó las comunicaciones del candidato, al final de esta
+agregan una imagen de un
+comunicado, publicado el 13 de enero pasado
+, en el que deslegitiman las publicaciones de La Silla Vacía, acusan a su directora  Juanita León de “activista” y de ser el “brazo mediático” de la Open Society Foundation, la fundación de George Soros. Estos ataques los explicaremos más adelante en uno de los cinco picos identificados en el análisis digital.
+Las narrativas y de desprestigio
+Este comunicado que revivió en la carta a Rubio
+plantea que los cuestionamientos periodísticos harían parte de una operación coordinada contra De la Espriella, una narrativa que puede contribuir a deslegitimar el trabajo de periodistas y medios.
+En el análisis realizado para este reportaje, se identificaron varias narrativas:
+Se señala a medios como La Silla Vacía, Cambio y a periodistas, como Daniel Coronell, Cecilia Orozco y Juanita León, como parte de una supuesta “bodega del establecimiento” y se les presenta como “activistas” o “milicianos digitales”.
+Los acusan por hacerle campaña a otros candidatos como Iván Cepeda o al precandidato Juan Carlos Pinzón.
+Sus investigaciones o columnas de opinión son calificadas de “fake news”.
+Se cuestiona su independencia al vincularlos con la narrativa de agendas internacionales “woke” como la de George Soros.
+La mención a Soros, fundador de la
+Open Society Foundation
+, ha sido usada por sectores de ultraderecha en otros contextos internacionales para construir la idea de una supuesta conspiración global. En su libro Epidemia Ultra, Franco Delle Done analiza cómo líderes como Viktor Orbán en Hungría han perfeccionado la estrategia de construir enemigos para polarizar a la sociedad y uno de esos enemigos fue Soros.
+Según Delle Done, esto ha sido una “herramienta fundamental para la ultraderecha” que busca la polarización discursiva
+. “Al vincular a la prensa con este tipo de 'complots internacionales', se logra una 'descalificación absoluta' del periodista, presentándolo no como un profesional, sino como un 'villano' o un 'miliciano' al servicio de agendas oscuras”, dice.
+En varios de los casos las narrativas son apoyadas con videos e imágenes creados con inteligencia artificial, algunos de los cuales se tratan de
+desinformaciones como un supuesto apoyo
+de Juanita León y la Silla Vacía con el precandidato Juan Carlos Pinzón y el GEA.
+Estos mensajes presentan a los periodistas y medios críticos como enemigos y actores políticos con intereses. Ataques similares sufrió la periodista Laura Ardila en 2023,
+luego de denunciar que su libro ‘La Costa Nostra’, en el que cuenta la historia del Clan Char, había sido censurado por la editorial Planeta.
+En la
+investigación sobre estos ataques
+, publicada por Colombiacheck y la Liga contra el Silencio, la académica mexicana
+Rossana Reguillo
+, exdirectora de Signa Lab de la Universidad de Guadalajara, explicó que “en este tipo de ataques se pueden identificar tres anzuelos: el primero es el descrédito a las competencias de la persona a la que atacan; el segundo es la descalificación hacia esa persona que busca minar su credibilidad y el tercero es un anzuelo en el que se usan desinformaciones contra ella”.
+Cómo se reconstruyó el ecosistema
+El análisis tuvo dos fases. En la primera, La Liga contra el Silencio utilizó la herramienta Meltwater para descargar una base de datos de 35.175 publicaciones en X, entre el 17 de noviembre de 2025 y el 25 de febrero de 2026.
+Con los trinos descargados, se identificaron cinco picos, que coinciden con los artículos y columnas de periodistas.
+Pero estos no fueron los únicos periodistas descalificados por los tuiteros. Aunque en menor cantidad y agresividad, en otros
+mensajes
+cuestionan a medios como
+El Colombiano
+,
+El País América
+y
+Cuestión Pública
+por sus publicaciones en las que hacen referencia a que De la Espriella fue abogado de Alex Saab, capturado como testaferro de Nicolás Maduro.
+De los 35.175 tuits descargados, solo el 0,50% corresponden a trinos originales, 3,83% eran citas, 4,35% eran respuestas y el 91,32% eran retuits. Según la investigación, esto indica que la mayor parte de la conversación no corresponde a contenido original, sino a la amplificación de mensajes producidos por un grupo más reducido de cuentas.
+Con la base de datos se identificaron dos tipos de cuentas:
+Las cuentas cuyos trinos tuvieron más interacciones: @aniabello_r, @nicolasgomezmsn, @jbagbam, @elultraderechi1, @Adrianaveterin, @byviral24, @visi0naria, @santiuribedel10, @bacano_andres,
+@abelardistas,
+@defensoresco, @don_patriota1
+@Mauriciotobonf,
+@Natalia__Gar. Estas cuentas suman aproximadamente el 70% de las interacciones. En este listado la herramienta solo muestra el engage de los trinos originales y las citas de tuits (QT).
+Las cuentas que publicaron el mayor número de tuits: las primeras quince cuentas de este listado realizado por Meltwater publicaron de 56 a 24 tuits, QT, RT y respuestas.
+Sin embargo, las cuentas que publicaron los tuits con más interacciones no son las mismas del mayor número de publicaciones (incluyendo los RT).  En ambos grupos solamente coincide @byviral24, que realizó un total de 24 publicaciones, de las cuales 15 eran RT a trinos de @abelardistas, @Natalia__Gar, @aniabello_r, @nicolasgomezmsn, @elultraderechi1 y
+@defensoresco
+.
+En la segunda fase se realizó un análisis manual. A partir de los tuits con mayor número de interacciones se identificó un listado de cuentas recurrentes. Con ese listado se hicieron búsquedas avanzadas en X filtrando por fechas de los picos y por palabras clave, lo que permitió encontrar publicaciones que no habían aparecido en la descarga inicial, en su mayoría porque contenían imágenes o videos sin texto suficiente para ser capturados por la búsqueda automatizada.
+Ese rastreo manual amplió el universo de cuentas: algunas ya aparecían en la base de datos con retuits, citas o comentarios, y otras, como la del influencer Vincenth Ramos y el abogado Germán Calderón, sólo emergieron en esta segunda fase. Con todo ese material se construyó un documento cronológico de tuits y desinformaciones clave, organizado según los cinco picos identificados.
+Los protagonistas de los ataques en X
+A partir del análisis de los cinco picos de conversación en X se identificó el conjunto de cuentas que participaron de forma recurrente en la publicación y difusión de contenidos contra periodistas y medios.
+En el listado, se encontraron cuentas que han reconocido hacer parte de la campaña de De la Espriella (la cuenta de defensores, el abogado de la campaña, integrantes del movimiento Tigresas por la Patria), otras que usan en sus perfiles fotos y nombres del candidato pero que funcionan como cuentas de fans y varios influenciadores que están haciendo campaña a favor de este y lo han acompañado en
+giras
+a ciudades como
+Pereira
+,
+Bucaramanga
+,
+Cali
+,
+Armenia
+. Se trata de  Santiago Giraldo, Miguel Zarate y Vincent Ramos,
+cercanos
+a Alejandro Bermeo, elegido como senador en la autollamada
+“Lista del Tigre”
+.
+Estos influencers, que se
+consideran discípulos
+de
+Agustín Laje
+, el activista argentino, tienen su gran fuerza en canales de YouTube, en los que aparte de publicar videos a favor de De La Espriella repiten las narrativas contra los y las periodistas. Otro de estos canales es el de El Ultra Derechista (ultraderechis1 en X).
+Zárate y Ramos no solamente han atacado a periodistas sino que han publicado videos y tuits contra la candidata Paloma Valencia y su fórmula vicepresidencial, Juan Daniel Oviedo. Precisamente, la Silla Vacía publicó el 18 de marzo pasado el artículo
+“Paloma de izquierda y Oviedo inmoral: las narrativas del abelardismo”,
+en la que dicen que “los activistas digitales que rodean la campaña de Abelardo de la Espriella han dedicado sus virales espacios diarios para plantear la narrativa de que ellos dos no representan los valores de la derecha colombiana”.
+En la nota de La Silla también mencionan al activista cristiano
+Jonathan Silva,
+quien hizo parte de la lista de Salvación Nacional a la Cámara de Representantes. Silva, @silvajonathan01, publicó un
+tuit con el mensaje
+: “La Silla Vacía quiere hacer ver al heredero Cepeda como un “líder” político y a Abelardo como una persona cuestionable. Ya Soros está metiendo a su medio de comunicación a hacerle propaganda a la extrema izquierda”.
+El análisis de X también identifica cuentas cuya identidad no es clara o presenta inconsistencias, como @AdrianaVeterin y @JBAGBAM, así como @ByViral24, que se presenta como medio digital. En el caso de @AdrianaVeterin, que se identifica como Adriana Martínez,se evidencia que en sus trinos suele ser más agresiva, tiene una
+foto de perfil
+que es usada en X por Tanya Swap
+(usuario @SwapTanya49210
+), y en el buscador abierto Idcrawl aparece como
+Adriana Acero
+y
+Clara Barraza
+.
+Entre tanto, @JBAGBAM ha tenido
+al menos tres identidades previas: en agosto de 2020 era @julianbuitragoa, en enero de 2021 se llamó @jubuarango y desde marzo de 2022 opera bajo el handle @JBAGBAM.
+Por su parte, @ByViral24 ha tenido doce cambios de nombre y fue creada originalmente en el contexto de la campaña de Rodolfo Hernández. En su etapa inicial, en la biografía se decía que era manejada por "voluntarios" de la campaña de Rodolfo Hernández.  Existen registros en
+Wayback Machine (archivo de la web) de
+febrero
+y
+septiembre
+de 2022 que capturan la cuenta bajo el usuario @RHpresidente y los nombres "Rodolfo Hernández Presidente" y Rodolfo Hernández Senador - Oposición -Apoyo”, respectivamente.
+Luego, la cuenta pasó a llamarse @alertalatam y en
+febrero de 2023 cambió al handle a @ByViral24. El portal de verificación Colombiacheck ha verificado a esta cuenta por publicar continuamente desinformaciones con ambos nombres (
+1
+,
+2
+).
+Fichas con esta información de cada uno
+https://public.flourish.studio/visualisation/29079730/
+Cronología de la ofensiva digital
+El rastreo de la conversación digital en X permite identificar un patrón de
+acción-reacción, donde la red de campaña se activa ante la publicación de notas periodísticas críticas contra De la Espriella.
+Gráfico
+https://drive.google.com/file/d/1vfvdfS7AVqdhY7rorB71tsXyGhvD-UBw/view?usp=sharing
+Pico 1: arranca la narrativa de “guerra sucia” contra El Tigre
+El 26 de noviembre de 2025, La Silla Vacía publicó la investigación
+“Militantes de Abelardo se coordinan para atacar a Vicky y a Pinzón en redes”
+, en la que denunció la existencia de pequeños grupos coordinados de apoyo y un grupo más amplio que posiciona mensajes favorables a Abelardo de la Espriella y desfavorables a sus contrincantes. Según el reportaje, un conjunto de cuentas respondería a instrucciones enviadas a través de chats de WhatsApp administrados por la página
+www.abelardistas.com
+. Abelardistas es descrito como un grupo de militantes voluntarios, abierto a cualquier persona y que, según sus propios integrantes, no tendría afiliación formal con la campaña.
+Esta publicación detonó el primer pico de ataques. En los días siguientes, entre el 26 de noviembre y el 1 de diciembre, empezaron a circular mensajes que repetían marcos similares: acusaciones de “guerra sucia”, señalamientos de que el artículo era “mentiroso” y la idea de que existía una campaña contra el candidato. Estas narrativas fueron difundidas por múltiples cuentas, que publicaron y replicaron contenidos en distintos formatos, incluyendo hilos y videos.
+Uno de los
+mensajes
+fue el del influencer Miguel Zárate, quien el 29 de noviembre de 2025 publicó un hilo en el que se dijo que “periodistas, medios alternativos y creadores de contenido están recibiendo mensajes pagados para repetir exactamente lo que dice ese artículo”, refiriéndose a la nota de La Silla Vacía. Este señalamiento se convirtió en uno de los ejes del discurso durante este primer pico.
+Las narrativas no se limitaron a X, también se reprodujeron en plataformas propias del ecosistema del candidato. En el portal Defensores de la Patria se publicaron dos comunicados (
+1
+,
+2
+) en los que se rechazaba una supuesta “campaña de desinformación y manipulación digital” y se anunciaba una denuncia penal. Aunque en estos textos no se mencionaba directamente a La Silla Vacía, sí retomaban los mismos argumentos que circulaban en X, especialmente la idea de una “guerra sucia”.
+Pico 2: montajes contra periodistas con IA
+Entre el 11 y el 18 de enero
+El domingo 11 de enero de 2026, la columnista y abogada Ana Bejarano publicó la columna de opinión en Cambio y Los Danieles,
+“Alex y Abelardo”
+, en la que habló de los “hilos” que conectan al candidato “con Alex Saab, hoy ministro de Industrias y Producción Nacional de Venezuela”. Dos días después, el 13 de enero, la Silla Vacía publicó el artículo
+“El universo empresarial De la Espriella: socios cuestionados, saldos en rojo y bienes raíces”
+.
+Las notas periodísticas motivaron dos comunicados en la página de Defensores de la Patria– en los cuales se anunciaban
+“acciones jurídicas”
+y se pedía
+rectificación
+a Bejarano– y la
+columna de opinión ¿Por qué La Silla Vacía ataca sin descanso a Abelardo de la Espriella?
+. Esta fue la columna citada en la carta a Rubio.
+Paralelo a esto, en X se presentaron ataques a la Silla Vacía con insultos como La Silla Coja.
+Además, lanzaron varias imágenes y videos creados con IA, con montajes a Juanita León, junto a George Soros y al precandidato Juan Carlos Pinzón. En otro
+montaje,
+pusieron la foto de Pinzón abrazando a la directora de La Silla.
+Estos montajes fueron compartidos por @Adrianaveterin o su cuenta alterna @Adrianaveterin2, así como por la cuenta @Byviral24. Otros de los tuits, algunos que también incluían imágenes hechas con IA, los publicaron @realsantiago, @miguelzarate y @elultraderechi1.
+Para Juanita León, directora de La Silla Vacía, “montajes como el usado para  instalar la narrativa de una supuesta cercanía con el precandidato Juan Carlos Pinzón muestra los alcances de las mentiras y de la inteligencia artificial usada en la desinformación  (...) A La Silla en varias elecciones la han atacado pero esta vez es la que hemos visto casos con tanta agresividad y en los que los ataques se hacen desde la campaña. Es un acoso permanente que lo que busca es quitarnos licencia para hacer nuestro trabajo, buscan silenciarnos”, dijo a La Liga contra el Silencio.
+Pico 3: ataques a Ana Bejarano
+Entre el 22 y el 24 de enero
+Este pico se dio luego de que el propio candidato, diera una
+entrevista en Noticias Caracol
+,  en la que al ser cuestionado por la persecución judicial a la prensa se defendió diciendo que “una cosa es la opinión —legítima, incluso cuando es dura— y otra muy distinta es la desinformación, la mentira o la estigmatización presentada como noticia”. Además, insistió en la narrativa de calificar a “la señora Bejarano" de ser “una periodista activista” y los periodistas como un “combo de politiqueros disfrazados”.
+Ante las declaraciones del candidato, la abogada y columnista Bejarano le contestó en una
+réplica en el mismo medio
+.
+Tanto las declaraciones del candidato como la respuesta de Bejarano despertaron nuevos ataques contra la columnista. Una vez más aparecieron entre las cuentas que los publicaron aparecieron @Adrianaveterin y @Byviral24. Fragmentos de la entrevista de De La Espriella fueron difundidos en X el 22 de enero por @Adrianaveterin en un
+tuit
+con el mensaje: “Con este video a Ana Bejarano no le van a quedar ganas de meterse con tigre. Abelardo no se la va a dejar montar de esos pseudo periodistas traga mierdas al servicio del PETROSANTISMO (...)”.
+Al día siguiente, tras la respuesta de Bejarano en Caracol, la misma cuenta publicó otro trino atacando a la columnista con insultos. Ese tuit, con un alcance de 36.600 vistas, fue uno de los más virales en nuestro listado de X al ser compartido más de mil veces. Al ataque se
+unió
+@Byviral24 que la calificó de “Sra Abogada experiodista, de izquierda”.
+Ese mismo día, en YouTube El Ultraderechista
+publicó
+el mismo video de @Adrianaveterin con el mensaje: “Abelardo de la Espriella le Responde a la Pseudoperiodista Ana Bejarano”.
+Como se observa en las imágenes, en varios de los casos las fotos de Ana Bejarano fueron alteradas, aparentemente con IA, para hacerla parecer llorando o haciendo muecas (las fotos originales no tienen esa expresión).
+Ana Bejarano,
+directora de la ONG El Veinte y columnista de Los Danieles, expresó a la Liga contra el Silencio que los ataques han tenido varios frentes: por un lado solicitudes de rectificación y amenazas de demandas a través del abogado Germán Calderón y ataques en redes sociales con fotos alteradas con herramientas de IA en la que le deforman la imagen o insultos y señalamientos.
+“Se vuelve un asedio que afecta la salud mental. Ellos tienen la finalidad de silenciarnos. Y a las mujeres, que defendemos las voces progresistas feministas, tienen un componente de ataque que es con connotación sexual, de nuestra imagen o de calificarnos como brutas o putas”, expresó Bejarano.
+Al revisar en el listado de tuits los ataques contra Bejarano encontramos este componente en trinos misóginos de @adrianveterin y en respuestas o citas a los tuis.  Al realizar una búsqueda avanzada en X, entre el 20 y el 25 de enero, encontramos varias
+citas
+o comentarios con calificativos como
+“perra”
+, “boba” y “
+zorra mentirosa
+” y “
+prepago sin trabajo
+”.
+En 2023, la  Defensoría del Pueblo publicó el informe
+“La libertad de expresión bajo asedio: El acoso a periodistas de opinión en Twitter"
+, en el que al analizar los ataques en esta red social a mujeres que tienen influencia y opinión periodística se identificaron expresiones misóginas como "brutas", "perras" o "putas". “Estos términos despectivos se utilizan para menospreciar, desacreditar y deslegitimar la labor de las mujeres en materia de libertad de expresión y acceso a la información. Así, en vez de evaluar el trabajo periodístico o debatir de forma democrática frente a las opiniones que expresan las mujeres periodistas, se identificó que se realizan ataques personales con claras marcas de género. La amplitud del fenómeno puede llevar a la autocensura y a disminuir los espacios públicos de participación de las mujeres”, indica el informe.
+Pico 4: un supuesto estudio digital
+Entre el 2 y el 6 de febrero
+En este pico el foco lo tuvo un supuesto estudio digital publicado por el portal defensores y que fue replicado en redes sociales por varias de las cuentas citadas en este informe.
+En el comunicado, firmado por el abogado
+Calderón, se dijo que una supuesta "investigación digital" reveló que Daniel Coronell, La Silla Vacía y Cambio actuaban como una “bodega coordinada”. Como se observa en esta imagen se menciona que cuentas como @estoescambio, @dcoronell y @lasillavacia atacan al candidato.
+Tras esa publicación, en X, cuentas como
+@abelardopte
+publicaron este gráfico en el que hablan de tres supuestas fases de un “ataque coordinado contra el Tigre”. En el gráfico no solo se califica de bodega a estos medios sino que se asegura que La Silla Vacía, Daniel Coronell y Cambio le “hacen campaña a Cepeda”.
+El portal
+Cazadores de Fake News
+, dedicado a la verificación de información y análisis de operaciones de influencia en Venezuela y Latinoamérica desde 2019, publicó el análisis
+“Las acusaciones infundadas de la campaña de De la Espriella contra periodistas”
+, en el que  explicó que el supuesto estudio “no cumple estándares mínimos de verificabilidad: no incluye datos como la clave de búsqueda que permita replicar el análisis, no demuestra que haya existido coordinación (que usuarios comunes compartan audiencias no es evidencia de ello), no prueba la existencia de una red de amplificación coordinada o «bodega», y no aporta evidencia que vincule a los periodistas y medios señalados con las supuestas anomalías detectadas”.
+Los ataques ahora se dirigieron  también  hacia el periodista Daniel Coronell. Pero al revisar las publicaciones de Coronell en X,
+entre el 10 y el 29 de enero de 2026
+, la investigación indica que no hay elementos que lleven a inferir que actuó junto con La Silla Vacía en una “acción coordinada y sistemática” contra De la Espriella.  Durante los días del supuesto estudio solo aparece
+este tuit del 13 de enero
+en el que cita la nota con el mensaje: “El universo empresarial De la Espriella: socios cuestionados, saldos en rojo y bienes raíces. Investigación de
+@jinethprieto
+y Ana León para
+@lasillavacia
+”.
+En este pico también participaron cuentas como @Adrianaveterin, @Nataliagar,
+@Abelardopte
+,
+@Germancalderone
+,
+@FRealsantiagog
+,
+@Vanedecol
+y
+@ADLEsincensura
+, que replicaron el estudio y los comunicados.
+Pico 5: videos, tipo Cómic, creados con  IA
+Del 11 al 16 de febrero
+Este fue el pico más alto con más de quince mil tuits (el 43% de los trinos). Los ataques se concentraron en los periodistas Daniel Coronell, Cecilia Orozco y en La Silla Vacía.
+Los trinos y comunicados de Defensores de la Patria se dieron en respuesta a la columna
+“De la Espriella: 62 % de sus cinco millones de firmas no fue avalado”
+, publicada el 11 de febrero por Cecilia Orozco en El Espectador, y a una
+entrevista
+realizada por Coronell a David Murcia, cerebro de la pirámide DMG, subida el 12 de febrero a YouTube.
+Murcia en la entrevista acusó a su ex abogado de apropiarse
+5.000 ​millones de pesos y de pedirle una millonaria suma para “tocar” a unos congresistas y hacer lobby para que no votaran una iniciativa de ley que buscaba ​regular mejor los movimientos de dinero en efectivo hace 18 años. La demanda disciplinaria que anunció Murcia en la entrevista fue hecha por su abogada actual Sondra Macollins, quien también es candidata presidencial por firmas.
+De la Espriella negó las acusaciones y
+demandó a su ex cliente por injuria y calumnia
+. Ademá, dijo que estas acusaciones sobre supuestas irregularidades ya fueron investigadas a fondo y archivadas por las autoridades desde el año 2010.
+En redes sociales la respuesta desde la campaña y de cuentas afines se reflejó en comunicados del abogado Germán Calderón y en la circulación de videos realizados con IA.
+Los ataques contra los periodistas tuvieron estos enfoques:
+1. Calificar sus publicaciones como “fake news” o como un montaje.
+Que se trata de acciones de “las bodegas de la gran prensa”.  Esta narrativa no solo estuvo en X sino que se inició por la columna
+“Las cifras no mienten: este es el desequilibrio informativo de la Silla Vacía,cambio y los Danieles en busca de afectar a Abelardo de la Espriella, y favorecer a su único rival”
+, publicada el 10 de febrero  por Alejandro Bermeo en Defensores de la Patria.
+Que los periodistas Daniel Coronell y Cecilia Orozco son aliados del presidente Gustavo Petro y del candidato y actual senador Iván Cepeda para atacar a De la Espriella. Esta narrativa se posicionó apoyada en fotos y vídeos manipulados o creados con IA que circularon en varias redes sociales, incluyendo X.
+Algunas de las imágenes fueron compartidas en un
+hilo publicado
+en la cuenta el @ultraderechi1, el 11 de febrero.  “Enloquecieron los escuderos de Iván Cepeda al ver las encuestas donde el único que lo puede derrotar es EL TIGRE. Y después de 10 días de fervor popular brutal: miles y miles de patriotas recibiendo al Tigre en cada ciudad”, dijo en el primer trino.
+Días después, en otro tuit
+@AbelardoPTE
+presenta una animación en la que aparece Iván Cepeda como jefe, seguido de Armando Benedetti entregando un maletín de dinero a Coronell. Luego, el periodista dice “veamos qué tenemos en bodega”, y aparece Cecilia Orozco respondiendo.
+Pie de foto:
+Imagen de uno de los videos tipo historietas realizado con IA que se viralizó en X.
+Esa misma cuenta publicó otros videos creados o alterados con IA con mensajes como  “
+El Cartel de las Mentiras!”
+,
+“Cada domingo las bodegas activistas
+se coordinan para difundir mentiras o sacar titulares de refritos para desprestigiar aún cuando ya todos los casos fueron resueltos a favor de Abelardo”,
+“importante difundir este video”
+.
+También
+publicó otro post
+con un audio que supuestamente muestra la relación entre el narcotraficante Justo Pastor Perafán con Coronell.
+Este es el panorama de los ataques contra medios de comunicación y periodistas, que la Liga contra el Silencio documentó entre noviembre y febrero pasado. Sin embargo, estos continuaron los meses siguientes. Incluso, la periodista María Jimena Duzán publicó, el pasado 21 de mayo, un
+tuit
+en el que dijo: “Me acaban de tumbar mi  canal de YouTube por cuenta de un ataque de bots  luego de que publiqué una vídeo columna en la que critico a  @ABDELAESPRIELLA
+@Google
+que me dice?  Así funciona la libertad de expresión que profesan los seguidores de El tigre”.
+Actualizado el
+: Vie, 05/29/2026 - 16:55

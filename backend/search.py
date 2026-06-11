@@ -58,6 +58,7 @@ class HybridSearch:
         top_k: int = TOP_K_DEFAULT,
         candidato: Optional[str] = None,
         tipo: Optional[str] = None,
+        categoria: Optional[str] = None,
     ) -> List[Dict[str, Any]]:
         """
         Búsqueda en 4 etapas:
@@ -75,8 +76,9 @@ class HybridSearch:
         bm25_ranked = [
             (idx, bm25_scores[idx])
             for idx, m in enumerate(self.metadata)
-            if (not candidato or m.get("candidato") == candidato)
-            and (not tipo      or m.get("tipo")      == tipo)
+            if (not candidato or m.get("candidato")    == candidato)
+            and (not tipo      or m.get("tipo")         == tipo)
+            and (not categoria or m.get("categoria_fc") == categoria)
         ]
         bm25_ranked.sort(key=lambda x: x[1], reverse=True)
         bm25_ranks: Dict[str, int] = {
@@ -85,13 +87,13 @@ class HybridSearch:
         }
 
         # ── 2. Búsqueda vectorial ─────────────────────────────────────────
-        where_filter = None
-        if candidato and tipo:
-            where_filter = {"$and": [{"candidato": {"$eq": candidato}}, {"tipo": {"$eq": tipo}}]}
-        elif candidato:
-            where_filter = {"candidato": {"$eq": candidato}}
-        elif tipo:
-            where_filter = {"tipo": {"$eq": tipo}}
+        conds = []
+        if candidato: conds.append({"candidato":    {"$eq": candidato}})
+        if tipo:      conds.append({"tipo":         {"$eq": tipo}})
+        if categoria: conds.append({"categoria_fc": {"$eq": categoria}})
+        if   len(conds) == 1: where_filter = conds[0]
+        elif len(conds) >  1: where_filter = {"$and": conds}
+        else:                 where_filter = None
 
         query_emb = self.model.encode([query], normalize_embeddings=True)[0].tolist()
         vec_res   = self.collection.query(
@@ -141,14 +143,17 @@ class HybridSearch:
                 continue
             m = meta_index[cid]
             results.append({
-                "id":        cid,
-                "text":      m["text"],
-                "title":     m["title"],
-                "source":    m["source"],
-                "tipo":      m["tipo"],
-                "candidato": m["candidato"],
-                "lang":      m["lang"],
-                "score":     round(float(score), 4),
+                "id":                 cid,
+                "text":               m["text"],
+                "title":              m["title"],
+                "source":             m["source"],
+                "tipo":               m["tipo"],
+                "candidato":          m["candidato"],
+                "lang":               m["lang"],
+                "categoria_fc":       m.get("categoria_fc", ""),
+                "candidato_afectado": m.get("candidato_afectado", ""),
+                "veredicto":          m.get("veredicto", ""),
+                "score":              round(float(score), 4),
             })
 
         return results

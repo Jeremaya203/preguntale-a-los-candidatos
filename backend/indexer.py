@@ -120,21 +120,47 @@ def detect_metadata(path: pathlib.Path) -> Dict[str, str]:
     except ValueError:
         relative = path
 
-    parts     = relative.parts
-    tipo      = "referencia"
-    candidato = ""
-    lang      = "es"
+    parts        = relative.parts
+    tipo         = "referencia"
+    candidato    = ""
+    lang         = "es"
+    categoria_fc = ""
 
     if parts and parts[0] == "candidatos":
         tipo = "candidato"
         if len(parts) > 1 and parts[1] in CANDIDATOS:
             candidato = parts[1]
+    elif parts and parts[0] == "fact-checking":
+        tipo = "fact-checking"
+        # parts[1] = contra_cepeda | contra_espriella | general
+        if len(parts) > 1:
+            categoria_fc = parts[1]
     elif parts and parts[0] == "referencia":
         tipo = "referencia"
         if len(parts) > 1 and parts[1] == "en":
             lang = "en"
 
-    return {"tipo": tipo, "candidato": candidato, "lang": lang}
+    return {"tipo": tipo, "candidato": candidato, "lang": lang,
+            "categoria_fc": categoria_fc}
+
+
+# Campos del header que extraemos de los .txt de fact-checking
+FC_HEADER_KEYS = ("FUENTE", "CANDIDATO_AFECTADO", "TITULAR",
+                  "ACUSACION_FALSA", "VEREDICTO")
+
+def parse_fc_header(text: str) -> Dict[str, str]:
+    """
+    Extrae los campos del header de un artículo de fact-checking.
+    El header termina en la línea de separación (━━━).
+    """
+    fields: Dict[str, str] = {}
+    for line in text.splitlines():
+        if line.strip().startswith("━"):
+            break  # fin del header
+        for key in FC_HEADER_KEYS:
+            if line.startswith(key + ":"):
+                fields[key] = line.split(":", 1)[1].strip()
+    return fields
 
 # ─── Main ───────────────────────────────────────────────────────────────────
 
@@ -181,16 +207,34 @@ def main():
     for doc_path in sorted(docs):
         meta      = detect_metadata(doc_path)
         title     = doc_path.stem.replace("-"," ").replace("_"," ").title()
-        label     = f"candidato:{CANDIDATOS.get(meta['candidato'], '?')}" \
-                    if meta["tipo"] == "candidato" \
-                    else f"referencia ({'EN' if meta['lang']=='en' else 'ES'})"
-
-        print(f"📖  {doc_path.name}")
-        print(f"     └─ {label}")
 
         raw = extract_text(doc_path)
         if not raw or len(raw.strip()) < 100:
+            print(f"📖  {doc_path.name}")
             print("     ⚠️  vacío, omitido\n"); continue
+
+        # ── Metadatos extra para fact-checking ─────────────────────────────
+        fc_extra: Dict[str, str] = {}
+        if meta["tipo"] == "fact-checking":
+            header = parse_fc_header(raw)
+            # El TITULAR del header es más legible que el nombre de archivo
+            if header.get("TITULAR"):
+                title = header["TITULAR"]
+            fc_extra = {
+                "categoria_fc":       meta["categoria_fc"],
+                "candidato_afectado": header.get("CANDIDATO_AFECTADO", ""),
+                "fuente":             header.get("FUENTE", ""),
+                "acusacion_falsa":    header.get("ACUSACION_FALSA", ""),
+                "veredicto":          header.get("VEREDICTO", ""),
+            }
+            label = f"fact-checking:{meta['categoria_fc']} ← {fc_extra['fuente'] or '?'}"
+        elif meta["tipo"] == "candidato":
+            label = f"candidato:{CANDIDATOS.get(meta['candidato'], '?')}"
+        else:
+            label = f"referencia ({'EN' if meta['lang']=='en' else 'ES'})"
+
+        print(f"📖  {doc_path.name}")
+        print(f"     └─ {label}")
 
         # Normalizar espacios
         clean = " ".join(raw.split())
@@ -207,6 +251,7 @@ def main():
                 "tipo":      meta["tipo"],
                 "candidato": meta["candidato"],
                 "lang":      meta["lang"],
+                **fc_extra,
             }
             all_texts.append(chunk)
             all_tokenized.append(tokenize(chunk))
@@ -222,7 +267,8 @@ def main():
     print(f"📊 Total fragmentos a indexar: {len(all_texts)}")
     print(f"   (Iván: {sum(1 for m in all_metadata if m.get('candidato')=='ivan-cepeda')} | "
           f"Abelardo: {sum(1 for m in all_metadata if m.get('candidato')=='abelardo')} | "
-          f"Referencia: {sum(1 for m in all_metadata if m.get('tipo')=='referencia')})\n")
+          f"Referencia: {sum(1 for m in all_metadata if m.get('tipo')=='referencia')} | "
+          f"Fact-checking: {sum(1 for m in all_metadata if m.get('tipo')=='fact-checking')})\n")
 
     # Generar embeddings en UN SOLO BATCH grande (más eficiente en CPU)
     print(f"🔢 Generando embeddings (batch={BATCH_SIZE}, CPU multi-núcleo)...")
@@ -260,11 +306,13 @@ def main():
     # Resumen
     cands = sum(1 for m in all_metadata if m["tipo"] == "candidato")
     refs  = sum(1 for m in all_metadata if m["tipo"] == "referencia")
+    fc    = sum(1 for m in all_metadata if m["tipo"] == "fact-checking")
     print("=" * 55)
     print("🎉 ¡Indexación agresiva completada!")
     print(f"   Total fragmentos : {len(all_metadata)}")
     print(f"   De candidatos    : {cands}")
     print(f"   De referencia    : {refs}")
+    print(f"   De fact-checking : {fc}")
     print(f"\n▶  Siguiente paso: cd backend && uvicorn main:app --reload")
 
 if __name__ == "__main__":
