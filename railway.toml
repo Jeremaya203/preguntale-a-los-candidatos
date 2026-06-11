@@ -1,6 +1,6 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "python -c \"from sentence_transformers import SentenceTransformer, CrossEncoder; print('Descargando bi-encoder...'); SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2'); print('Descargando cross-encoder...'); CrossEncoder('cross-encoder/mmarco-mMiniLMv2-L12-H384-v1'); print('Modelos listos!')\" && echo 'Reconstruyendo indice...' && python backend/indexer.py"
+buildCommand = "python -c \"from sentence_transformers import SentenceTransformer, CrossEncoder; print('Descargando bi-encoder...'); SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2'); print('Descargando cross-encoder...'); CrossEncoder('cross-encoder/mmarco-mMiniLMv2-L12-H384-v1'); print('Modelos listos!')\" && echo 'Reconstruyendo indice...' && python indexer.py"
 
 [deploy]
 startCommand = "uvicorn main:app --host 0.0.0.0 --port $PORT"
