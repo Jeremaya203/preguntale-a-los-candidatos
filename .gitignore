@@ -23,3 +23,6 @@ backend/analyses_backup/
 # Índice generado — se reconstruye en el deploy con indexer.py (ver railway.toml)
 backend/chroma_db/
 backend/bm25_index.pkl
+
+# Reporte interno de planeación (no para el repo público)
+REPORTE-TECNICO.md

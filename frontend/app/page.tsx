@@ -315,9 +315,20 @@ function Sidebar({
         {/* Fuentes de referencia */}
         <div style={{padding:'14px',borderTop:'1px solid #1E1E32'}}>
           <div style={{fontFamily:'var(--pixel)',fontSize:'5px',color:'#3A3A52',marginBottom:8,letterSpacing:'0.1em'}}>FUENTES DE REFERENCIA</div>
-          {['Plan Nal. de Desarrollo 2022-2026','Misión de Sabios 2019','OECD Economic Survey Colombia 2024'].map((f,i)=>(
+          {['Plan Nal. de Desarrollo 2022-2026','Misión de Sabios 2019','OECD Economic Survey Colombia 2024','CARF — Informes al Congreso','Marco Fiscal de Mediano Plazo 2025','DANE — GEIH y Pobreza 2025'].map((f,i)=>(
             <div key={i} style={{fontSize:'9px',color:'#4A4A62',padding:'3px 0',
               borderBottom:'1px solid #1E1E32',lineHeight:1.5}}>◉ {f}</div>
+          ))}
+        </div>
+
+        {/* Créditos a verificación y análisis independiente */}
+        <div style={{padding:'14px',borderTop:'1px solid #1E1E32'}}>
+          <div style={{fontFamily:'var(--pixel)',fontSize:'5px',color:'#3A3A52',marginBottom:8,letterSpacing:'0.1em'}}>VERIFICACIÓN Y ANÁLISIS</div>
+          <p style={{fontSize:'9px',color:'#3A3A52',lineHeight:1.6,marginBottom:6}}>
+            Desmentidos y análisis de medios independientes, con crédito a sus autores:
+          </p>
+          {['ColombiaCheck','AFP Factual','La Liga Contra el Silencio','MOE','Cazadores de Fake News','El Espectador','El Tiempo','La Silla Vacía'].map((f,i)=>(
+            <div key={i} style={{fontSize:'9px',color:'#4A4A62',padding:'2px 0',lineHeight:1.5}}>◦ {f}</div>
           ))}
         </div>
       </aside>
