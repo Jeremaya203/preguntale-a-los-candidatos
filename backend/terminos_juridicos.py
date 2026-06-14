@@ -779,31 +779,6 @@ TERMINOS = {
 }
 
 
-def get_terminos_para_prompt() -> str:
-    """
-    Retorna una representación del diccionario para incluir en el system prompt del LLM.
-    Solo incluye los 40 términos más relevantes para no sobrecargar el contexto.
-    """
-    prioritarios = [
-        "tutela", "acción de tutela", "habeas corpus", "referendo", "plebiscito",
-        "consulta popular", "asamblea nacional constituyente", "constituyente",
-        "corte constitucional", "fiscalía", "procuraduría", "contraloría",
-        "bloque de constitucionalidad", "nulidad electoral", "fuero constitucional",
-        "desafuero", "moción de censura", "sistema general de participaciones",
-        "regalías", "déficit fiscal", "reforma tributaria", "renta básica universal",
-        "sisbén", "reforma agraria", "catastro multipropósito", "fracking",
-        "transición energética", "macrocorrupción", "macrocorrupción sistémica",
-        "paz total", "jep", "justicia transicional", "desmovilización",
-        "eps", "colpensiones", "segunda vuelta", "balotaje", "escrutinio",
-        "preconteo", "bodega",
-    ]
-    lines = ["DICCIONARIO DE REFERENCIA (usa estas explicaciones exactas):"]
-    for t in prioritarios:
-        if t in TERMINOS:
-            lines.append(f'  "{t}": "{TERMINOS[t]}"')
-    return "\n".join(lines)
-
-
 if __name__ == "__main__":
     print(f"Total de términos en el diccionario: {len(TERMINOS)}")
     print("\nEjemplos:")

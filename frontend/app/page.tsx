@@ -241,10 +241,10 @@ function AnalysisContent({text}:{text:string}){
 
 // ─── Sidebar ───────────────────────────────────────────────────────────────
 function Sidebar({
-  isMobile, open, onClose, candidate, setCandidate, bubbleColor,
+  isMobile, open, onClose, candidate, setCandidate,
 }:{
   isMobile:boolean; open:boolean; onClose:()=>void;
-  candidate:Candidate; setCandidate:(c:Candidate)=>void; bubbleColor:string;
+  candidate:Candidate; setCandidate:(c:Candidate)=>void;
 }){
   const sidebarStyle: React.CSSProperties = isMobile
     ? { position:'fixed', top:0, left:0, bottom:0, zIndex:50, width:280,
@@ -298,7 +298,7 @@ function Sidebar({
               <div style={{marginTop:8,padding:'6px 8px',background:'#1A1A2E',
                 borderLeft:`2px solid ${c.colorBorder}`,fontSize:'10px',
                 color:'#6A6A82',fontStyle:'italic'}}>
-                "{c.slogan}"
+                &ldquo;{c.slogan}&rdquo;
               </div>
             </div>
           );
@@ -351,9 +351,13 @@ function MainApp(){
   const [analyzing,setAnalyzing]=useState(false);
   const [sidebarOpen,setSidebarOpen]=useState(true);
   const bottomRef=useRef<HTMLDivElement>(null);
+  const fullRef=useRef('');   // acumulador del texto en streaming (mutable por diseño)
 
-  // Cerrar sidebar por defecto en móvil
-  useEffect(()=>{ if(isMobile) setSidebarOpen(false); else setSidebarOpen(true); },[isMobile]);
+  // Ajustar el sidebar al cambiar de breakpoint. Patrón de "ajuste durante el
+  // render" (React docs) en vez de setState dentro de un useEffect → evita el
+  // warning de renders en cascada.
+  const [wasMobile,setWasMobile]=useState(isMobile);
+  if(wasMobile!==isMobile){ setWasMobile(isMobile); setSidebarOpen(!isMobile); }
 
   useEffect(()=>{bottomRef.current?.scrollIntoView({behavior:'smooth'})},[messages,analysis]);
 
@@ -376,15 +380,15 @@ function MainApp(){
       if(!res.body) throw new Error();
       const reader=res.body.getReader();
       const decoder=new TextDecoder();
-      let full='';
+      fullRef.current='';
       activateChars('responding');
       while(true){
         const{done,value}=await reader.read();
         if(done) break;
-        full+=decoder.decode(value,{stream:true});
-        setMessages(prev=>{const u=[...prev];u[u.length-1]={role:'assistant',content:full};return u;});
+        fullRef.current+=decoder.decode(value,{stream:true});
+        setMessages(prev=>{const u=[...prev];u[u.length-1]={role:'assistant',content:fullRef.current};return u;});
       }
-      const{text:clean,sources}=parseSources(full);
+      const{text:clean,sources}=parseSources(fullRef.current);
       setMessages(prev=>{const u=[...prev];u[u.length-1]={role:'assistant',content:clean,sources};return u;});
     }catch{
       setMessages(prev=>{const u=[...prev];u[u.length-1]={role:'assistant',content:'Error al conectar con el servidor.'};return u;});
@@ -458,7 +462,6 @@ function MainApp(){
           onClose={()=>setSidebarOpen(false)}
           candidate={candidate}
           setCandidate={setCandidate}
-          bubbleColor={bubbleColor}
         />
 
         {/* ── Main content ── */}
