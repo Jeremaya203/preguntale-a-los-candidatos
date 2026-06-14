@@ -202,8 +202,8 @@ function WelcomeScreen({onEnter}:{onEnter:()=>void}){
 
       {/* Botón entrar */}
       <button onClick={onEnter} style={{
-        fontFamily:'var(--pixel)',fontSize: isMobile?'9px':'10px',
-        padding: isMobile?'16px 32px':'14px 40px',
+        fontFamily:'var(--pixel)',fontSize: isMobile?'9px':'12px',
+        padding: isMobile?'16px 32px':'18px 48px',
         background:'#F0A020',color:'#0E0E1A',border:'none',cursor:'pointer',
         letterSpacing:'0.1em',transition:'all 0.2s',
         boxShadow:'0 0 20px rgba(240,160,32,0.3)'}}>
@@ -476,7 +476,7 @@ function MainApp(){
                     {key:'abelardo',label:'EL TIGRE',color:CANDS['abelardo'].color,border:CANDS['abelardo'].colorBorder},
                   ] as const).map(o=>(
                     <button key={o.key} onClick={()=>setCandidate(o.key)} style={{
-                      fontFamily:'var(--pixel)',fontSize:'6px',padding:'7px 14px',
+                      fontFamily:'var(--pixel)',fontSize:'8px',padding:'11px 22px',
                       background:candidate===o.key?o.color:'transparent',
                       color:candidate===o.key?'#0E0E1A':o.color,
                       border:`2px solid ${o.border}`,cursor:'pointer',transition:'all 0.15s'}}>
@@ -543,8 +543,8 @@ function MainApp(){
           <div style={{display:'flex',borderBottom:'1px solid #2A2A42',flexShrink:0}}>
             {([{key:'chat',label:'💬  CHAT'},{key:'analyze',label:'📊  ANÁLISIS'}] as const).map(t=>(
               <button key={t.key} onClick={()=>setTab(t.key)} style={{
-                flex:1,padding: isMobile?'14px':'12px',
-                fontFamily:'var(--pixel)',fontSize:'7px',
+                flex:1,padding: isMobile?'14px':'14px',
+                fontFamily:'var(--pixel)',fontSize: isMobile?'7px':'9px',
                 background:tab===t.key?'#151525':'transparent',
                 color:tab===t.key?bubbleColor:'#3A3A52',border:'none',
                 borderBottom:tab===t.key?`2px solid ${bubbleColor}`:'2px solid transparent',
@@ -623,8 +623,8 @@ function MainApp(){
                   onFocus={e=>e.currentTarget.style.borderColor=bubbleColor}
                   onBlur={e=>e.currentTarget.style.borderColor='#2A2A42'}/>
                 <button onClick={()=>sendMessage(input)} disabled={loading||!input.trim()}
-                  style={{fontFamily:'var(--pixel)',fontSize:'6px',
-                    padding: isMobile?'14px 16px':'10px 16px',
+                  style={{fontFamily:'var(--pixel)',fontSize: isMobile?'6px':'8px',
+                    padding: isMobile?'14px 16px':'13px 24px',
                     minWidth: isMobile?60:undefined,
                     background:!loading&&input.trim()?bubbleColor:'#1A1A2E',
                     color:!loading&&input.trim()?'#0E0E1A':'#3A3A52',
@@ -659,8 +659,8 @@ function MainApp(){
                 <div style={{display:'flex',flexWrap:'wrap',gap: isMobile?6:8,justifyContent:'center'}}>
                   {DIMS.map(dim=>(
                     <button key={dim} onClick={()=>runAnalysis(dim)} disabled={analyzing} style={{
-                      fontFamily:'var(--pixel)',fontSize:'5px',
-                      padding: isMobile?'10px 12px':'8px 12px',
+                      fontFamily:'var(--pixel)',fontSize: isMobile?'5px':'7px',
+                      padding: isMobile?'10px 12px':'11px 18px',
                       minHeight: isMobile?40:undefined,
                       background:dimension===dim?bubbleColor:'#151525',
                       color:dimension===dim?'#0E0E1A':'#5A5A72',
