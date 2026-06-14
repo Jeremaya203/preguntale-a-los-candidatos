@@ -9,6 +9,7 @@ from typing import List, Optional
 from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
+from fastapi.concurrency import run_in_threadpool
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 from groq import Groq
@@ -290,7 +291,11 @@ async def chat(req: ChatRequest):
     base_analysis  = load_analysis(detected_dim) if detected_dim else None
 
     # ── Búsqueda RAG ──────────────────────────────────────────────────────
-    results = search_engine.search(query, top_k=6, candidato=req.candidato)
+    # La búsqueda (BM25 + vectorial + cross-encoder) es CPU-bound y bloqueante;
+    # la corremos en un threadpool para no bloquear el event loop (varios usuarios
+    # en paralelo aprovechan los vCPU; PyTorch libera el GIL en la inferencia).
+    results = await run_in_threadpool(
+        search_engine.search, query, top_k=6, candidato=req.candidato)
     context, n = build_context(results, req.candidato or "todos")
     sources = [{"title":r["title"],"tipo":r["tipo"],"candidato":r["candidato"],"lang":r["lang"]} for r in results]
 
@@ -303,7 +308,9 @@ async def chat(req: ChatRequest):
         fc_results = []
         for cat in ("contra_cepeda", "contra_espriella", "general"):
             fc_results.extend(
-                search_engine.search(query, top_k=2, tipo="fact-checking", categoria=cat)
+                await run_in_threadpool(
+                    search_engine.search, query, top_k=2,
+                    tipo="fact-checking", categoria=cat)
             )
         if fc_results:
             fc_ctx, _ = build_context(fc_results, "fact-checking")
@@ -387,14 +394,16 @@ async def analyze(req: AnalyzeRequest):
         raise HTTPException(500, "GROQ_API_KEY no configurada")
     if not search_engine:
         raise HTTPException(503, "Base de documentos no indexada.")
-    ref_results        = search_engine.search(dim, top_k=6, tipo="referencia")
+    ref_results        = await run_in_threadpool(
+        search_engine.search, dim, top_k=6, tipo="referencia")
     ref_context, ref_n = build_context(ref_results, f"referencia sobre {dim}")
     CANDS = {"ivan-cepeda":"Iván Cepeda Castro (Pacto Histórico)",
              "abelardo":"Abelardo de la Espriella 'El Tigre'"}
     secciones = []
     for cand in req.candidatos:
         nombre  = CANDS.get(cand, cand)
-        results = search_engine.search(dim, top_k=4, candidato=cand)
+        results = await run_in_threadpool(
+            search_engine.search, dim, top_k=4, candidato=cand)
         ctx, n  = build_context(results, nombre)
         aviso   = f"⛔ SIN fragmentos de {nombre}." if n == 0 else f"✅ {n} fragmentos."
         secciones.append(f"PROPUESTAS DE {nombre.upper()} ({aviso})\n{ctx}")
