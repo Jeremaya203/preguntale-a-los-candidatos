@@ -241,6 +241,360 @@ TERMINOS = {
         "y se perpetúa a sí misma, como un sistema paralelo de poder."
     ),
 
+    # ── Finanzas públicas y macroeconomía ────────────────────────────────────
+    "regla fiscal": (
+        "Ley que le pone un límite al déficit y a la deuda del gobierno para que las "
+        "cuentas del Estado no se salgan de control. La vigila un comité técnico independiente (el CARF)."
+    ),
+    "carf": (
+        "Comité Autónomo de la Regla Fiscal: organismo técnico e independiente del gobierno "
+        "que vigila que el Estado cumpla los límites de déficit y deuda."
+    ),
+    "marco fiscal de mediano plazo": (
+        "Documento del Ministerio de Hacienda que proyecta los ingresos, gastos y deuda del "
+        "Estado para los próximos años. Sirve para planear las finanzas públicas."
+    ),
+    "mfmp": (
+        "Marco Fiscal de Mediano Plazo: documento del Ministerio de Hacienda que proyecta "
+        "ingresos, gastos y deuda del Estado para los próximos años."
+    ),
+    "balance primario": (
+        "La diferencia entre lo que el Estado recibe y lo que gasta, SIN contar el pago de "
+        "intereses de la deuda. Si es positivo, sobra dinero para ir pagando lo que se debe."
+    ),
+    "superávit primario": (
+        "Cuando al Estado le sobra dinero después de sus gastos, antes de pagar intereses "
+        "de la deuda. Permite reducir la deuda con el tiempo."
+    ),
+    "déficit estructural": (
+        "Faltante de dinero del Estado que no se debe a una crisis pasajera, sino a un "
+        "desbalance permanente entre lo que gasta y lo que recauda."
+    ),
+    "deuda pública": (
+        "El total de dinero que el Estado debe a bancos, inversionistas y otros países "
+        "por los préstamos que ha tomado."
+    ),
+    "deuda neta": (
+        "La deuda total del gobierno descontando el dinero y activos líquidos que tiene a "
+        "su favor. Mide mejor cuánto debe realmente."
+    ),
+    "sostenibilidad fiscal": (
+        "Capacidad del Estado de pagar sus deudas y sostener sus gastos en el tiempo sin "
+        "caer en una crisis ni endeudarse sin control."
+    ),
+    "sostenibilidad de la deuda": (
+        "Que el nivel de deuda del Estado se pueda mantener y pagar sin ahogar las finanzas "
+        "públicas en el futuro."
+    ),
+    "consolidación fiscal": (
+        "Conjunto de medidas (subir ingresos o bajar gastos) para reducir el déficit y "
+        "ordenar las finanzas del Estado."
+    ),
+    "presión fiscal": (
+        "La tensión sobre las cuentas del Estado cuando los gastos crecen más rápido que "
+        "los ingresos, obligando a recortar o a endeudarse."
+    ),
+    "pib": (
+        "Producto Interno Bruto: el valor de todo lo que produce un país en un año. "
+        "Es la medida del tamaño de la economía."
+    ),
+    "producto interno bruto": (
+        "El valor de todos los bienes y servicios que produce un país en un año. "
+        "Es la medida del tamaño de su economía."
+    ),
+    "ingresos tributarios": (
+        "El dinero que recibe el Estado por el cobro de impuestos como la renta o el IVA."
+    ),
+    "gasto público": (
+        "El dinero que el Estado destina a funcionar y a prestar servicios: salud, "
+        "educación, seguridad, infraestructura y pago de la deuda."
+    ),
+    "partidas rígidas": (
+        "Gastos del presupuesto que el Estado está obligado a pagar sí o sí (sueldos, "
+        "pensiones, deuda) y que no se pueden recortar fácilmente."
+    ),
+
+    # ── Empleo y desarrollo social ───────────────────────────────────────────
+    "informalidad laboral": (
+        "Trabajadores sin contrato formal, sin seguridad social ni pensión. "
+        "En Colombia es muy alta, sobre todo en el campo."
+    ),
+    "informalidad": (
+        "Actividad económica o empleo por fuera de las reglas legales: sin contrato y "
+        "sin pagar impuestos ni seguridad social."
+    ),
+    "salario mínimo": (
+        "El sueldo más bajo que la ley permite pagar por un mes de trabajo. "
+        "Lo fija cada año el gobierno con empresarios y sindicatos."
+    ),
+    "productividad laboral": (
+        "Cuánto valor produce un trabajador por hora trabajada. Si sube, la economía puede "
+        "crecer y pagar mejores salarios sin disparar los precios."
+    ),
+    "vivienda de interés social": (
+        "Viviendas de precio limitado por la ley y con subsidios del Estado, dirigidas a "
+        "familias de bajos ingresos."
+    ),
+    "déficit habitacional": (
+        "La cantidad de hogares que no tienen vivienda propia adecuada, ya sea porque les "
+        "falta casa o porque viven en condiciones precarias."
+    ),
+    "crédito hipotecario": (
+        "Préstamo de largo plazo para comprar vivienda, donde la misma casa queda como "
+        "garantía del pago."
+    ),
+    "arrendamiento social": (
+        "Programas donde el Estado ayuda a familias de bajos ingresos a pagar el arriendo "
+        "de una vivienda digna."
+    ),
+    "registro único de víctimas": (
+        "Base de datos oficial del Estado donde se inscriben las víctimas del conflicto "
+        "armado para acceder a ayuda y reparación."
+    ),
+
+    # ── Medio ambiente, agro y cultura ───────────────────────────────────────
+    "frontera agrícola": (
+        "El límite hasta donde se permite cultivar y usar la tierra para agricultura y "
+        "ganadería, para proteger bosques y ecosistemas."
+    ),
+    "yacimientos no convencionales": (
+        "Depósitos de petróleo o gas atrapados en rocas profundas, que requieren técnicas "
+        "como el fracking para extraerse."
+    ),
+    "economía naranja": (
+        "Las actividades económicas basadas en la creatividad y la cultura: cine, música, "
+        "videojuegos, diseño y arte."
+    ),
+    "industrias creativas": (
+        "Sectores económicos que generan valor a partir de la creatividad y la cultura: "
+        "audiovisual, música, diseño y contenidos digitales."
+    ),
+
+    # ── Entidades y siglas del Estado ────────────────────────────────────────
+    "dane": (
+        "Departamento Administrativo Nacional de Estadística: la entidad oficial que mide "
+        "las cifras del país (empleo, pobreza, precios, censo)."
+    ),
+    "ocde": (
+        "Organización para la Cooperación y el Desarrollo Económicos: club de países que "
+        "comparan políticas públicas. Colombia es miembro desde 2020."
+    ),
+    "oecd": (
+        "Sigla en inglés de la OCDE, la Organización para la Cooperación y el Desarrollo "
+        "Económicos, de la que Colombia es miembro desde 2020."
+    ),
+    "dnp": (
+        "Departamento Nacional de Planeación: entidad del gobierno que diseña y evalúa "
+        "las políticas y la inversión pública."
+    ),
+    "dian": (
+        "Dirección de Impuestos y Aduanas Nacionales: la entidad que recauda los impuestos "
+        "y controla el contrabando."
+    ),
+    "gnc": (
+        "Gobierno Nacional Central: el núcleo del Estado (ministerios y entidades nacionales). "
+        "Sus cuentas miden el déficit y la deuda del país."
+    ),
+    "pgn": (
+        "Presupuesto General de la Nación: el plan anual de cuánto dinero recibe y en qué "
+        "lo gasta el Estado, aprobado por el Congreso."
+    ),
+    "presupuesto general de la nación": (
+        "El plan anual de ingresos y gastos del Estado, aprobado por el Congreso cada año."
+    ),
+    "vigencias futuras": (
+        "Permiso para comprometer dinero de presupuestos de años siguientes, usado para "
+        "financiar obras y contratos de largo plazo."
+    ),
+    "icbf": (
+        "Instituto Colombiano de Bienestar Familiar: entidad encargada de proteger a la "
+        "niñez y apoyar a las familias."
+    ),
+    "sena": (
+        "Servicio Nacional de Aprendizaje: entidad pública que ofrece formación técnica y "
+        "para el trabajo, de manera gratuita."
+    ),
+    "icetex": (
+        "Entidad estatal que presta dinero a estudiantes para financiar su educación superior."
+    ),
+    "adres": (
+        "Administradora de los Recursos del Sistema de Salud: la entidad que maneja y gira "
+        "la plata del sistema de salud."
+    ),
+    "ani": (
+        "Agencia Nacional de Infraestructura: entidad que estructura y vigila las concesiones "
+        "de vías, puertos y aeropuertos."
+    ),
+    "banco de la república": (
+        "El banco central de Colombia. Es independiente del gobierno y su tarea principal es "
+        "controlar la inflación y emitir la moneda."
+    ),
+    "ecopetrol": (
+        "La empresa de petróleo más grande de Colombia, de mayoría estatal. Es clave para "
+        "los ingresos fiscales y las regalías."
+    ),
+    "ruv": (
+        "Registro Único de Víctimas: base de datos oficial donde se inscriben las víctimas "
+        "del conflicto armado para acceder a reparación."
+    ),
+    "eln": (
+        "Ejército de Liberación Nacional: la guerrilla más antigua que aún sigue activa "
+        "en Colombia."
+    ),
+    "farc": (
+        "Fuerzas Armadas Revolucionarias de Colombia: exguerrilla que firmó el Acuerdo de "
+        "Paz de 2016 y se desmovilizó."
+    ),
+    "clan del golfo": (
+        "El grupo armado ilegal y narcotraficante más grande de Colombia, de origen "
+        "paramilitar."
+    ),
+    "inpec": (
+        "Instituto Nacional Penitenciario y Carcelario: entidad que administra las cárceles "
+        "del país."
+    ),
+    "esmad": (
+        "Escuadrón Móvil Antidisturbios: la unidad de la Policía para el control de "
+        "protestas."
+    ),
+
+    # ── Más conceptos económicos ─────────────────────────────────────────────
+    "política fiscal": (
+        "Las decisiones del gobierno sobre cuánto cobra en impuestos y cuánto y en qué "
+        "gasta, para influir en la economía."
+    ),
+    "política monetaria": (
+        "Las decisiones del banco central sobre las tasas de interés y la cantidad de "
+        "dinero, para controlar la inflación."
+    ),
+    "recaudo": (
+        "El dinero que efectivamente recoge el Estado por concepto de impuestos."
+    ),
+    "evasión fiscal": (
+        "Cuando una persona o empresa no paga, de forma ilegal, los impuestos que debe."
+    ),
+    "gasto social": (
+        "El dinero que el Estado destina a salud, educación, subsidios y programas para "
+        "reducir la pobreza."
+    ),
+    "inversión pública": (
+        "El dinero que el Estado gasta en obras y proyectos que dan beneficios a futuro: "
+        "vías, colegios, hospitales."
+    ),
+    "crecimiento económico": (
+        "El aumento de la producción de bienes y servicios de un país en un período, "
+        "medido por el PIB."
+    ),
+    "inflación": (
+        "El aumento generalizado de los precios, que hace que el dinero alcance para menos "
+        "cosas con el tiempo."
+    ),
+    "tasa de interés": (
+        "El costo de pedir dinero prestado, o lo que se gana al ahorrar. La fija en gran "
+        "parte el banco central."
+    ),
+    "grado de inversión": (
+        "Calificación que dan agencias internacionales a un país considerado seguro para "
+        "prestarle. Perderlo encarece su deuda."
+    ),
+
+    # ── Más conceptos de salud y social ──────────────────────────────────────
+    "seguridad social": (
+        "El sistema que protege a las personas en salud, pensión y riesgos laborales, "
+        "financiado con aportes y recursos del Estado."
+    ),
+    "atención primaria": (
+        "El primer nivel de salud, cercano a la gente: prevención y atención básica antes "
+        "de necesitar un hospital."
+    ),
+    "aps": (
+        "Atención Primaria en Salud: enfoque que prioriza la prevención y la atención "
+        "cercana a la comunidad."
+    ),
+    "caps": (
+        "Centros de Atención Primaria en Salud: sedes de primer nivel propuestas en la "
+        "reforma para acercar el servicio a los barrios."
+    ),
+    "upc": (
+        "Unidad de Pago por Capitación: el monto fijo que el Estado paga por cada afiliado "
+        "al sistema de salud para cubrir su atención."
+    ),
+    "rectoría": (
+        "La capacidad del Estado de dirigir, regular y vigilar un sector (por ejemplo, la "
+        "salud), en vez de dejarlo solo en manos de privados."
+    ),
+    "intermediación": (
+        "El papel de empresas que se ubican entre el Estado y el servicio final. En salud "
+        "se refiere al rol de las EPS administrando recursos."
+    ),
+    "giro directo": (
+        "Cuando el Estado paga directamente a hospitales y clínicas, sin que el dinero "
+        "pase por una intermediaria."
+    ),
+    "formalización laboral": (
+        "Proceso de pasar empleos informales a empleos con contrato, seguridad social y "
+        "pensión."
+    ),
+    "primera infancia": (
+        "La etapa de la vida de 0 a 6 años. La inversión en esta edad es clave para el "
+        "desarrollo de las personas."
+    ),
+    "deserción escolar": (
+        "Cuando los estudiantes abandonan el colegio antes de terminar sus estudios."
+    ),
+    "educación terciaria": (
+        "La educación después del bachillerato: universidades, técnicas y tecnológicas."
+    ),
+
+    # ── Más conceptos de ambiente, agro y obras ──────────────────────────────
+    "matriz energética": (
+        "La mezcla de fuentes con que un país produce su energía: petróleo, gas, agua, "
+        "sol, viento."
+    ),
+    "energías renovables": (
+        "Fuentes de energía que no se agotan y contaminan poco: solar, eólica, hidráulica, "
+        "geotérmica."
+    ),
+    "deforestación": (
+        "La destrucción de bosques, principal fuente de emisiones que calientan el planeta "
+        "en Colombia."
+    ),
+    "co2": (
+        "Dióxido de carbono: el principal gas que causa el calentamiento global, generado "
+        "al quemar combustibles y talar bosques."
+    ),
+    "economía circular": (
+        "Modelo que busca reutilizar, reparar y reciclar para producir menos basura y "
+        "aprovechar mejor los recursos."
+    ),
+    "reforma rural integral": (
+        "El primer punto del Acuerdo de Paz: busca llevar tierra, vías, servicios y "
+        "desarrollo al campo colombiano."
+    ),
+    "restitución de tierras": (
+        "Proceso para devolver sus tierras a campesinos que fueron despojados por la "
+        "violencia."
+    ),
+    "sustitución de cultivos": (
+        "Programa para que los campesinos cambien los cultivos de coca por cultivos "
+        "legales, con apoyo del Estado."
+    ),
+    "seguridad alimentaria": (
+        "Que toda la población tenga acceso permanente a alimentos suficientes y nutritivos."
+    ),
+    "derechos de autor": (
+        "Los derechos que tiene un creador sobre su obra (música, libros, cine) para que "
+        "le paguen por su uso."
+    ),
+    "asociación público privada": (
+        "Esquema donde un privado financia y construye una obra pública (como una vía) y "
+        "el Estado le paga a lo largo del tiempo."
+    ),
+    "concesión vial": (
+        "Contrato donde una empresa privada construye y mantiene una carretera y la cobra "
+        "mediante peajes durante años."
+    ),
+
     # ── Paz y conflicto ──────────────────────────────────────────────────────
     "paz total": (
         "Política del gobierno Petro para negociar simultáneamente con todos los grupos "

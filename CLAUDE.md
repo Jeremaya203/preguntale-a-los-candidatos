@@ -69,6 +69,7 @@ The `/analyze` endpoint follows the same dimension detection → pre-calc lookup
 | `backend/indexer.py` | Document ingestion pipeline (PDF/DOCX/TXT → ChromaDB + BM25) |
 | `backend/utils.py` | Shared `tokenize()` function + Spanish stopwords (used by both indexer and search) |
 | `backend/terminos_juridicos.py` | `TERMINOS` dict (legal/political term → plain-Spanish explanation). **Runtime dependency** imported by `main.py` for tooltip annotation |
+| `backend/generar_analyses.py` | Batch regenerator for `analyses/<slug>.json` — retrieves real fragments via `HybridSearch` (candidate proposals + institutional viability docs) and synthesizes the mandatory 6-section structure via Groq. Grounded only on retrieved fragments (no external knowledge). Run `python backend/generar_analyses.py [slug ...]` (no args = all 12). It generates un-annotated text and then **auto-chains `anotar_analyses.py`** so the JSONs are never left without `{{term::explanation}}` markup (which would break frontend tooltips) |
 | `backend/anotar_analyses.py` | One-shot CLI that pre-annotates `analyses/*.json` with `{{term::explanation}}` markup (backs up originals to `analyses_backup/`) |
 | `backend/scraper_factcheck.py` | Downloads fact-checking articles → `documents/fact-checking/` (neutral sources only; `--balance` checks symmetry) |
 | `backend/scraper_analisis.py` | Downloads independent analysis articles → `documents/analisis-independientes/` |
@@ -78,7 +79,7 @@ The `/analyze` endpoint follows the same dimension detection → pre-calc lookup
 | `frontend/components/LegalTooltip.tsx` | Click-to-open glossary popover for an annotated term |
 | `frontend/app/api/*/route.ts` | Next.js proxy routes to backend |
 
-**Scratch files — ignore / do not extend.** `backend/indexer_patch.py`, `backend/main_tooltips_patch.py` (already-applied patch notes), `backend/_dump_fragments.py` (one-off debug dump), and the stray `dfdsfsdfsd}` file are throwaway artifacts, not part of the running system.
+**Scratch files & dirs — ignore / do not extend.** `backend/indexer_patch.py`, `backend/main_tooltips_patch.py` (already-applied patch notes), `backend/_dump_fragments.py` (one-off debug dump), and the stray `dfdsfsdfsd}` file are throwaway artifacts, not part of the running system. Likewise these directories are not live code: `cepeda-rag/` (empty), `backend/proyecto-cepeda/` (stray nested `venv`), and the analysis backups `backend/analyses_backup/` (originals from `anotar_analyses.py`) and `backend/analyses_snapshot_pre_regen_20260611/` (pre-regeneration snapshot — see memory note on the 2026-06-11 candidate-attribution fixes). Edit only `backend/analyses/*.json`.
 
 ### Search Pipeline (backend/search.py)
 
