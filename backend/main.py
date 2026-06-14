@@ -2,13 +2,14 @@
 main.py — Pregúntale a los Candidatos
 Análisis precalculados + RAG híbrido + Groq streaming
 """
-import os, re, json, pathlib
+import os, re, json, pathlib, time, logging
+from collections import defaultdict, deque
 from contextlib import asynccontextmanager
 from typing import List, Optional
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 from groq import Groq
 from search import HybridSearch
@@ -162,17 +163,20 @@ def is_disinfo_query(query: str) -> bool:
     q = query.lower()
     return any(kw in q for kw in FC_KEYWORDS)
 
+MAX_MSG_LEN  = 4000   # caracteres por mensaje
+MAX_MESSAGES = 40     # mensajes por petición
+
 class Message(BaseModel):
     role: str
-    content: str
+    content: str = Field(max_length=MAX_MSG_LEN)
 
 class ChatRequest(BaseModel):
-    messages: List[Message]
+    messages: List[Message] = Field(min_length=1, max_length=MAX_MESSAGES)
     candidato: Optional[str] = None
 
 class AnalyzeRequest(BaseModel):
-    dimension: str
-    candidatos: List[str] = ["ivan-cepeda", "abelardo"]
+    dimension: str = Field(max_length=80)
+    candidatos: List[str] = Field(default=["ivan-cepeda", "abelardo"], max_length=5)
 
 search_engine: Optional[HybridSearch] = None
 groq_client:   Optional[Groq]         = None
@@ -194,7 +198,47 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(title="Pregúntale a los Candidatos", lifespan=lifespan)
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+
+# Orígenes permitidos por CORS. Por defecto "*" para facilitar el self-hosting;
+# en producción define ALLOWED_ORIGINS=https://tu-frontend.vercel.app (coma-separado).
+_origins = [o.strip() for o in os.getenv("ALLOWED_ORIGINS", "*").split(",") if o.strip()]
+app.add_middleware(CORSMiddleware, allow_origins=_origins,
+                   allow_methods=["GET", "POST", "OPTIONS"], allow_headers=["*"])
+
+# ─── Protección del backend público (secreto compartido + rate-limiting) ───
+# El código es open source, así que la seguridad NO puede depender de la oscuridad.
+# Para que nadie pueda agotar la GROQ_API_KEY llamando directamente al backend:
+#  - BACKEND_SHARED_SECRET: si está definido, exige el header X-Internal-Secret
+#    (lo envía el proxy de Vercel). El valor vive SOLO en env vars, nunca en el repo.
+#    Si NO está definido, no se exige (permite self-hosting y no rompe el deploy actual).
+#  - Rate-limit por IP en memoria (respeta X-Forwarded-For tras el proxy de Railway).
+BACKEND_SHARED_SECRET = os.getenv("BACKEND_SHARED_SECRET", "")
+RATE_LIMIT_PER_MIN    = int(os.getenv("RATE_LIMIT_PER_MIN", "30"))
+_RATE_WINDOW          = 60.0
+_rate_hits: dict      = defaultdict(deque)
+logger = logging.getLogger("uvicorn.error")
+
+def _client_ip(request: Request) -> str:
+    xff = request.headers.get("x-forwarded-for")
+    if xff:
+        return xff.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
+
+async def guard(request: Request):
+    """Dependencia compartida por /chat y /analyze: secreto + rate-limit."""
+    if BACKEND_SHARED_SECRET and request.headers.get("x-internal-secret") != BACKEND_SHARED_SECRET:
+        raise HTTPException(401, "No autorizado.")
+    ip  = _client_ip(request)
+    now = time.time()
+    dq  = _rate_hits[ip]
+    while dq and dq[0] < now - _RATE_WINDOW:
+        dq.popleft()
+    if len(dq) >= RATE_LIMIT_PER_MIN:
+        raise HTTPException(429, "Demasiadas solicitudes. Espera un minuto e intenta de nuevo.")
+    dq.append(now)
+    if len(_rate_hits) > 10000:   # limpieza ocasional de IPs inactivas
+        for k in [k for k, v in _rate_hits.items() if not v]:
+            _rate_hits.pop(k, None)
 
 def detect_dimension(query: str) -> Optional[str]:
     """Detecta si la pregunta toca alguna de las 12 dimensiones."""
@@ -230,7 +274,7 @@ def health():
     return {"status": "ok", "total": total, "candidatos": cands,
             "referencia": refs, "fact_checking": fc}
 
-@app.post("/chat")
+@app.post("/chat", dependencies=[Depends(guard)])
 async def chat(req: ChatRequest):
     if not groq_client:
         raise HTTPException(500, "GROQ_API_KEY no configurada")
@@ -322,12 +366,13 @@ Responde de forma completa basándote principalmente en el ANÁLISIS COMPLETO. C
             for piece in annotate_token_stream(_groq_tokens()):
                 yield piece
             yield f"\n\n<!--SOURCES:{json.dumps(sources, ensure_ascii=False)}-->"
-        except Exception as e:
-            yield f"\n\nError: {str(e)}"
+        except Exception:
+            logger.exception("Error generando respuesta del LLM")
+            yield "\n\n[Error interno del servidor. Intenta de nuevo en un momento.]"
 
     return StreamingResponse(stream(), media_type="text/plain; charset=utf-8")
 
-@app.post("/analyze")
+@app.post("/analyze", dependencies=[Depends(guard)])
 async def analyze(req: AnalyzeRequest):
     dim  = req.dimension.strip()
     slug = DIM_MAP.get(dim.lower(), dim.lower().replace(" ","_"))
@@ -368,8 +413,9 @@ async def analyze(req: AnalyzeRequest):
             # fallback genera texto nuevo, así que se anota en vivo.
             for piece in annotate_token_stream(_groq_tokens()):
                 yield piece
-        except Exception as e:
-            yield f"\n\nError: {str(e)}"
+        except Exception:
+            logger.exception("Error generando respuesta del LLM")
+            yield "\n\n[Error interno del servidor. Intenta de nuevo en un momento.]"
     return StreamingResponse(stream_groq(), media_type="text/plain; charset=utf-8")
 
 if __name__ == "__main__":

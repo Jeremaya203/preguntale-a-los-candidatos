@@ -8,7 +8,13 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const response = await fetch(`${BACKEND_URL}/analyze`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      // Secreto compartido: solo nuestro proxy puede llamar al backend público.
+      ...(process.env.BACKEND_SHARED_SECRET
+        ? { 'X-Internal-Secret': process.env.BACKEND_SHARED_SECRET }
+        : {}),
+    },
     body: JSON.stringify(body),
   });
   if (!response.ok) {
