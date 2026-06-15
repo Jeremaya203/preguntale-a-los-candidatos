@@ -340,8 +340,20 @@ async def chat(req: ChatRequest):
     # La búsqueda (BM25 + vectorial + cross-encoder) es CPU-bound y bloqueante;
     # la corremos en un threadpool para no bloquear el event loop (varios usuarios
     # en paralelo aprovechan los vCPU; PyTorch libera el GIL en la inferencia).
-    results = await run_in_threadpool(
-        search_engine.search, query, top_k=6, candidato=req.candidato)
+    # Recuperación RAG. Con filtro de candidato hacemos DOS búsquedas y las
+    # combinamos: las propuestas de ese candidato (garantizadas) + el contexto
+    # neutral de referencia (CARF, MFMP, DANE, PND, OCDE, análisis indep.), que
+    # el filtro por candidato excluiría. Sin filtro ("Ambos") una sola búsqueda
+    # ya ve todo el corpus.
+    if req.candidato:
+        cand_results = await run_in_threadpool(
+            search_engine.search, query, top_k=4, candidato=req.candidato)
+        ref_results = await run_in_threadpool(
+            search_engine.search, query, top_k=4, tipo="referencia")
+        seen = {r["id"] for r in cand_results}
+        results = cand_results + [r for r in ref_results if r["id"] not in seen]
+    else:
+        results = await run_in_threadpool(search_engine.search, query, top_k=6)
     context, n = build_context(results, req.candidato or "todos")
     sources = [{"title":r["title"],"tipo":r["tipo"],"candidato":r["candidato"],"lang":r["lang"]} for r in results]
 
