@@ -2,7 +2,7 @@
 main.py — Pregúntale a los Candidatos
 Análisis precalculados + RAG híbrido + Groq streaming
 """
-import os, re, json, pathlib, time, logging
+import os, re, json, pathlib, time, logging, asyncio
 from collections import defaultdict, deque
 from contextlib import asynccontextmanager
 from typing import List, Optional
@@ -241,6 +241,39 @@ async def guard(request: Request):
         for k in [k for k, v in _rate_hits.items() if not v]:
             _rate_hits.pop(k, None)
 
+async def _aiter_blocking(sync_gen_factory):
+    """
+    Ejecuta un generador SÍNCRONO (la iteración del stream de Groq, que es
+    bloqueante) en un hilo aparte y entrega sus piezas SIN bloquear el event
+    loop, vía una cola. Así varias peticiones /chat concurrentes no se
+    serializan esperando los tokens de Groq.
+
+    NO cambia la llamada a Groq, ni el nº de tokens, ni el prompt: solo cómo se
+    bombean los tokens ya generados hacia el cliente.
+    """
+    queue: asyncio.Queue = asyncio.Queue()
+    loop = asyncio.get_running_loop()
+    _DONE = object()
+
+    def _producer():
+        try:
+            for item in sync_gen_factory():
+                loop.call_soon_threadsafe(queue.put_nowait, item)
+        except Exception:
+            logger.exception("Error generando respuesta del LLM")
+            loop.call_soon_threadsafe(
+                queue.put_nowait,
+                "\n\n[Error interno del servidor. Intenta de nuevo en un momento.]")
+        finally:
+            loop.call_soon_threadsafe(queue.put_nowait, _DONE)
+
+    loop.run_in_executor(None, _producer)
+    while True:
+        item = await queue.get()
+        if item is _DONE:
+            break
+        yield item
+
 def detect_dimension(query: str) -> Optional[str]:
     """Detecta si la pregunta toca alguna de las 12 dimensiones."""
     q = query.lower()
@@ -368,14 +401,12 @@ Responde de forma completa basándote principalmente en el ANÁLISIS COMPLETO. C
                 yield c
 
     async def stream():
-        try:
-            # Anota tooltips jurídicos sobre el texto del LLM (determinístico).
-            for piece in annotate_token_stream(_groq_tokens()):
-                yield piece
-            yield f"\n\n<!--SOURCES:{json.dumps(sources, ensure_ascii=False)}-->"
-        except Exception:
-            logger.exception("Error generando respuesta del LLM")
-            yield "\n\n[Error interno del servidor. Intenta de nuevo en un momento.]"
+        # La iteración del stream de Groq es bloqueante; la corremos en un hilo
+        # (vía _aiter_blocking) para no congelar el event loop con cada usuario.
+        # La anotación de tooltips (determinística) se mantiene igual.
+        async for piece in _aiter_blocking(lambda: annotate_token_stream(_groq_tokens())):
+            yield piece
+        yield f"\n\n<!--SOURCES:{json.dumps(sources, ensure_ascii=False)}-->"
 
     return StreamingResponse(stream(), media_type="text/plain; charset=utf-8")
 
@@ -417,14 +448,10 @@ async def analyze(req: AnalyzeRequest):
             c = chunk.choices[0].delta.content
             if c: yield c
     async def stream_groq():
-        try:
-            # El precalculado ya viene anotado por anotar_analyses.py; este
-            # fallback genera texto nuevo, así que se anota en vivo.
-            for piece in annotate_token_stream(_groq_tokens()):
-                yield piece
-        except Exception:
-            logger.exception("Error generando respuesta del LLM")
-            yield "\n\n[Error interno del servidor. Intenta de nuevo en un momento.]"
+        # El precalculado ya viene anotado por anotar_analyses.py; este fallback
+        # genera texto nuevo, anotado en vivo. Iteración bloqueante en hilo aparte.
+        async for piece in _aiter_blocking(lambda: annotate_token_stream(_groq_tokens())):
+            yield piece
     return StreamingResponse(stream_groq(), media_type="text/plain; charset=utf-8")
 
 if __name__ == "__main__":
