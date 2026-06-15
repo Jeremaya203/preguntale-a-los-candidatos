@@ -375,7 +375,12 @@ function MainApp(){
       const res=await fetch('/api/chat',{method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({
-          messages:[...messages,userMsg].map(m=>({role:m.role,content:m.content})),
+          // Enviamos el historial sin el markup de tooltips {{término::explicación}}:
+          // al LLM solo le sirve el texto plano y pesa mucho menos (menos tokens).
+          messages:[...messages,userMsg].map(m=>({
+            role:m.role,
+            content:m.content.replace(/\{\{(.*?)::.*?\}\}/g,'$1'),
+          })),
           candidato:candidate==='all'?null:candidate})});
       if(!res.body) throw new Error();
       const reader=res.body.getReader();

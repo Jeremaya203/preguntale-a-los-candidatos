@@ -10,7 +10,7 @@ from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from fastapi.concurrency import run_in_threadpool
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from dotenv import load_dotenv
 from groq import Groq
 from search import HybridSearch
@@ -164,8 +164,13 @@ def is_disinfo_query(query: str) -> bool:
     q = query.lower()
     return any(kw in q for kw in FC_KEYWORDS)
 
-MAX_MSG_LEN  = 4000   # caracteres por mensaje
-MAX_MESSAGES = 40     # mensajes por petición
+# Límites configurables por env var (ajustables sin re-desplegar código).
+# El tope que realmente acota el costo a Groq es MAX_TOTAL_LEN (suma de todo el
+# historial); el por-mensaje es generoso porque las respuestas del asistente
+# (análisis) son largas y el frontend las reenvía como contexto.
+MAX_MSG_LEN   = int(os.getenv("MAX_MSG_LEN", "16000"))    # caracteres por mensaje
+MAX_MESSAGES  = int(os.getenv("MAX_MESSAGES", "40"))      # nº de mensajes por petición
+MAX_TOTAL_LEN = int(os.getenv("MAX_TOTAL_LEN", "80000"))  # suma de caracteres del historial
 
 class Message(BaseModel):
     role: str
@@ -174,6 +179,14 @@ class Message(BaseModel):
 class ChatRequest(BaseModel):
     messages: List[Message] = Field(min_length=1, max_length=MAX_MESSAGES)
     candidato: Optional[str] = None
+
+    @field_validator("messages")
+    @classmethod
+    def _cap_total(cls, v):
+        total = sum(len(m.content) for m in v)
+        if total > MAX_TOTAL_LEN:
+            raise ValueError(f"conversación demasiado larga ({total} caracteres)")
+        return v
 
 class AnalyzeRequest(BaseModel):
     dimension: str = Field(max_length=80)
